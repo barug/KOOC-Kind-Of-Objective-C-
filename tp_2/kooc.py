@@ -13,6 +13,7 @@ def     main():
     if (av[1].endswith(".kc")):
         #modif grammar
         ast = parser.parse_file(av[1])
+        print(str(ast.to_yml()))
         # modif ast
         c_file = (av[1][:-2] + 'c')
         with open(c_file, 'w') as c_file:

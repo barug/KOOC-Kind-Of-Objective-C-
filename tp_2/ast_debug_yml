@@ -1,0 +1,184 @@
+     type=RootBlockStmt:
+        body type=list:
+            [ 0 ] type=Raw:
+                value str='#include <stdio.h>\n'
+            [ 1 ] type=Decl:
+                _ctype type=PrimaryType:
+                    _decltype
+                    _identifier str='int'
+                    _specifier int=0
+                    _storage int=0
+                _name str='a'
+            [ 2 ] type=Decl:
+                _assign_expr type=Literal:
+                    value str='12'
+                _ctype type=PrimaryType:
+                    _decltype
+                    _identifier str='int'
+                    _specifier int=0
+                    _storage int=0
+                _name str='b'
+            [ 3 ] type=Decl:
+                _ctype type=PrimaryType:
+                    _decltype type=QualType:
+                        _decltype
+                        _qualifier int=1
+                    _identifier str='int'
+                    _specifier int=0
+                    _storage int=0
+                _name str='c'
+            [ 4 ] type=Decl:
+                _assign_expr type=Literal:
+                    value str='12'
+                _ctype type=PrimaryType:
+                    _decltype type=QualType:
+                        _decltype
+                        _qualifier int=1
+                    _identifier str='int'
+                    _specifier int=0
+                    _storage int=0
+                _name str='d'
+            [ 5 ] type=Decl:
+                _ctype type=PrimaryType:
+                    _decltype type=PointerType:
+                        _decltype type=QualType:
+                            _decltype
+                            _qualifier int=1
+                    _identifier str='char'
+                    _specifier int=0
+                    _storage int=0
+                _name str='e'
+            [ 6 ] type=Decl:
+                _assign_expr type=Literal:
+                    value str='"asssigned !!"'
+                _ctype type=PrimaryType:
+                    _decltype type=PointerType:
+                        _decltype type=QualType:
+                            _decltype
+                            _qualifier int=1
+                    _identifier str='char'
+                    _specifier int=0
+                    _storage int=0
+                _name str='f'
+            [ 7 ] type=Decl:
+                _ctype type=FuncType:
+                    _decltype
+                    _identifier str='int'
+                    _params type=list:
+                        [ 0 ] type=Decl:
+                            _ctype type=PrimaryType:
+                                _decltype
+                                _identifier str='int'
+                                _specifier int=0
+                                _storage int=0
+                            _name str='ac'
+                        [ 1 ] type=Decl:
+                            _ctype type=PrimaryType:
+                                _decltype type=PointerType:
+                                    _decltype type=PointerType:
+                                        _decltype
+                                _identifier str='char'
+                                _specifier int=0
+                                _storage int=0
+                            _name str='av'
+                    _specifier int=0
+                    _storage int=0
+                _name str='main'
+                body type=BlockStmt:
+                    body type=list:
+                        [ 0 ] type=ExprStmt:
+                            expr type=Func:
+                                call_expr type=Id:
+                                    value str='printf'
+                                params type=list:
+                                    [ 0 ] type=Literal:
+                                        value str='"%d\\n"'
+                                    [ 1 ] type=Id:
+                                        value str='a'
+                        [ 1 ] type=Decl:
+                            _assign_expr type=Literal:
+                                value str='""'
+                            _ctype type=PrimaryType:
+                                _decltype type=PointerType:
+                                    _decltype
+                                _identifier str='char'
+                                _specifier int=0
+                                _storage int=0
+                            _name str='g'
+                    types type=ChainMap:
+                        maps type=list:
+                            [ 0 ] type=dict:
+                                
+                            [ 1 ] type=dict:
+                                
+            [ 8 ] type=Decl:
+                _ctype type=FuncType:
+                    _decltype
+                    _identifier str='int'
+                    _params type=list:
+                        [ 0 ] type=Decl:
+                            _ctype type=PrimaryType:
+                                _decltype type=PointerType:
+                                    _decltype type=PointerType:
+                                        _decltype
+                                _identifier str='char'
+                                _specifier int=0
+                                _storage int=0
+                            _name str='new'
+                        [ 1 ] type=Decl:
+                            _ctype type=PrimaryType:
+                                _decltype type=PointerType:
+                                    _decltype
+                                _identifier str='int'
+                                _specifier int=0
+                                _storage int=0
+                            _name str='end'
+                    _specifier int=0
+                    _storage int=0
+                _name str='test'
+                body type=BlockStmt:
+                    body type=list:
+                        [ 0 ] type=Decl:
+                            _ctype type=PrimaryType:
+                                _decltype
+                                _identifier str='int'
+                                _specifier int=0
+                                _storage int=0
+                            _name str='i'
+                    types type=ChainMap:
+                        maps type=list:
+                            [ 0 ] type=dict:
+                                
+                            [ 1 ] type=dict:
+                                
+        diagnostic type=Diagnostic:
+            logs type=list:
+                
+        types type=ChainMap:
+            maps type=list:
+                [ 0 ] type=dict:
+                    
+
+
+
+
+#include <stdio.h>                                                                                 
+
+int a;
+int b = 12;
+const int c;
+const int d = 12;
+
+const char * e;
+const char * f = "asssigned !!";
+
+int main(int ac, char **av)
+{
+        printf("%d\n", a);
+        char * g = "";
+}
+
+int test(char ** new, int * end)
+{
+        int i;
+}
