@@ -3,9 +3,11 @@
 
 from cnorm.passes import to_c
 from cnorm.parsing.declaration import Declaration
-from sys import argv as av
+from sys import exit, argv as av
 
-if __name__ == '__main__':
+def     main():
+    if (len(av) != 2):
+        exit(0)
     parser = Declaration()
     ast = parser.parse_file(av[1])
     # parser.inject_begin(ast)
@@ -14,3 +16,6 @@ if __name__ == '__main__':
     c_file.write(str(ast.to_c()))
     c_file.close()
     # print(str(ast.to_c()))
+
+if __name__ == '__main__':
+    exit(main())
