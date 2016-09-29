@@ -1,0 +1,6 @@
+#ifndef __MY_HEADER__
+#define __MY_HEADER__
+
+int x = 0;
+
+#endif /* !__MY_HEADER__ */
