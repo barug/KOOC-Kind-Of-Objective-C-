@@ -12,5 +12,7 @@ int main(int ac, char **av)
 }
 int test(char **new, int *end)
 {
+    int k = 42;
     int i;
 }
+int k = 42;

@@ -18,3 +18,8 @@ int test(char ** new, int * end)
 {
 	int i;
 }
+
+@begin(test)
+{
+	int k = 42;
+}
