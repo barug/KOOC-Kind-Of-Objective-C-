@@ -1,0 +1,10 @@
+@module Test
+{
+	int f(int, char);
+	char f(int, char);
+	void f(int*, char);
+
+	int a = 42;
+	float a = "42.42";
+	char a;
+}

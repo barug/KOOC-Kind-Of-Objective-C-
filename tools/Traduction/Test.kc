@@ -1,0 +1,20 @@
+@import "Test.kh"
+
+@implementation Test
+{
+	a = 'K';
+	int f(int i, char c)
+	{
+	  return (c + i);
+	}
+
+	char f(char c, char d)
+	{
+	  return (c - i);
+	}
+
+	void f(int *i, int c)
+	{
+	  *i += c;	
+	}
+}
