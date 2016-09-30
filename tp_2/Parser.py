@@ -70,7 +70,6 @@ def init_end(self, ast, name):
 @meta.hook(Parser)
 def set_begin_line(self, ast, name, decl):
     self.begin_line += str(self.value(decl))
-    
     return True
 
 @meta.hook(Parser)

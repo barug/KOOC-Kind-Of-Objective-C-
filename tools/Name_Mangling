@@ -1,0 +1,10 @@
+
+_K[[size_namespace][namespace]*]ER[[size_return_name_types][return_name_type]]A[nb_args]_[[size_name_args][name_args]*]
+
+
+class test
+{
+	int new(int, char);
+}
+
+_K4test3newER1iA2_1i1c
