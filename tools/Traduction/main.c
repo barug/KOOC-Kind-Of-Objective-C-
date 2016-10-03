@@ -1,4 +1,5 @@
-#include "Test.h"
+# include	<stdio.h>
+# include	"Test.h"
 
 int main()
 {

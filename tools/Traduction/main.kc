@@ -1,3 +1,4 @@
+#include <stdio.h>
 @import "Test.kh"
 
 int main()
