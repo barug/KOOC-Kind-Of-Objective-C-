@@ -1,10 +1,28 @@
+_K[[size_namespace][namespace]*]E R[size_return_name_types][return_name_type[[P]*]]A[nb_args]_[[size_name_args][name_args[[P]*]]*]
+				| T[size_return_name_types][return_name_type][[P]*]
 
-_K[[size_namespace][namespace]*]ER[[size_return_name_types][return_name_type]]A[nb_args]_[[size_name_args][name_args]*]
-
+IF POINTEUR add a P to the end of the type name == [int *a = _K1aET3intP] 
 
 class test
 {
-	int new(int, char);
+        int new(int, char);
+        _K4test3newER3intA2_3int4char
+
+        int new(int*, char);
+        _K4test3newER3intA2_3intP4char
+
+        int new(pint*, char);
+        _K4test3newER3intA2_4pintP4char
+
+        int a;
+        _K4test1aET3int;
+
+        floatt a;
+        _K4test1aET4float;
 }
 
-_K4test3newER1iA2_1i1c
+
+
+
+
+
