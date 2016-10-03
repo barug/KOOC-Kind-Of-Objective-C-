@@ -2,9 +2,13 @@
 
 int main()
 {
-	printf("%d\n", [Test.a]);
-	[Test.a] = 12;
-	printf("%d\n", [Test.a]);
-	int i = [Test f :2 :'a'];
-	printf("%c\n", char(i));	
+  printf("%d\n", [Test.a]);
+  printf("%f\n", [Test.a]);
+  printf("%f\n", @!(float)[Test.a]);
+
+  [Test.a] = 12;
+
+  printf("%d\n", [Test.a]);
+  int i = [Test f :2 :'a'];
+  printf("%c\n", char(i));
 }

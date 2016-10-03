@@ -7,6 +7,6 @@ void	_K4Test1fER4voidA2_3intP4char(int*, char);
 
 int	_K4Test1aET3int = 42;
 float	_K4Test1aET4float = 42.42;
-char*	_K4Test1aET4charP = "42";
+char	_K4Test1aET4char;
 
 # endif	 /* TEST_H */

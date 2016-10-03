@@ -3,6 +3,8 @@ _K[[size_namespace][namespace]*]E R[size_return_name_types][return_name_type[[P]
 
 IF POINTEUR add a P to the end of the type name == [int *a = _K1aET3intP] 
 
+namespace = [Test].h | void [main] () | 
+
 class test
 {
         int new(int, char);
