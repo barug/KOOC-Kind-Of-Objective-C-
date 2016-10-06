@@ -25,17 +25,23 @@ class koocParser(Grammar, Declaration):
 
        import_declaration = 
        [
-           '@import \"' id:file_to_import '\"' #add_import(_, file_to_import)
+           '@import \"' id:file_to_import '\"' 
+           #add_import(_, file_to_import)
        ]
 
        module_declaration = 
        [
-           '@module ' id:module_name #add_module_declaration(_, module_name)
+           '@module ' id:module_name
+           #add_module_declaration(_, module_name)
        ]
 
        module_implementation = 
        [
-           '@implementation ' id:module_name #add_module_implementation(_, module_name)
+           '@implementation ' id:module_name 
+           [
+               declaration    
+           ]
+           #add_module_implementation(_, module_name)
        ]
 
 """
