@@ -2,7 +2,6 @@
 
 @implementation Test
 {
-	a = 'K';
 	int f(int i, char c)
 	{
 	  return (c + i);

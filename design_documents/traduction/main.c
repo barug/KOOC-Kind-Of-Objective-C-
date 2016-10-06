@@ -1,9 +1,6 @@
 # include	<stdio.h>
 # include	"Test.h"
 
-int		_K4Test1aET3int = 42;
-float		_K4Test1aET4float = 42.42;
-
 int main()
 {
   printf("%d\n", _K4Test1aET3int);

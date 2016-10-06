@@ -7,5 +7,5 @@
 	int a = 42;
 	/* int a = 42; => on pete une erreur multli declaration */
 	float a = 42.42;
-	char a;
+	char a = 'K';
 }

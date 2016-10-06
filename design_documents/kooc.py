@@ -4,6 +4,7 @@
 from cnorm.passes import to_c
 from cnorm.parsing.declaration import Declaration
 from sys import exit, argv as av
+import koocParser
 from koocParser import *
 
 def     main():
@@ -11,13 +12,14 @@ def     main():
         exit(0)
     parser = koocParser()
     ast = parser.parse_file(av[1])
-    # parser.inject_begin(ast)
+    print("OK")
+    # # parser.inject_begin(ast)
     c_file = (av[1][:-2] + 'c')
     c_file = open(c_file, 'w')
     c_file.write(str(ast.to_c()))
     c_file.close()
     print("OK")
-    # print(str(ast.to_c()))
+    print(str(ast.to_c()))
 
 if __name__ == '__main__':
     exit(main())

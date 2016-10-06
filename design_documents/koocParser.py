@@ -16,47 +16,43 @@ class koocParser(Grammar, Declaration):
            | kooc_declaration
        ]
 
-       kooc_declaration = 
-       [
-           import_declaration
-           | module_declaration
-           | module_implementation
-       ]
-
-       import_declaration = 
-       [
-           '@import \"' id:file_to_import '\"' 
-           #add_import(_, file_to_import)
-       ]
-
-       module_declaration = 
-       [
-           '@module ' id:module_name Statement.compound_statement:st
-           #add_module_declaration(_, module_name, st)
-       ]
-
-       module_implementation = 
-       [
-           '@implementation ' id:module_name 
+           kooc_declaration = 
            [
-               declaration    
+               import_declaration
+               | module_declaration
+               | module_implementation
            ]
-           #add_module_implementation(_, module_name)
-       ]
+
+               import_declaration = 
+               [
+                   "@import \"" id:file_to_import "\"" 
+                   #add_import(current_block, file_to_import)
+               ]
+
+               module_declaration = 
+               [
+                   "@module " id:module_name Statement.compound_statement:st
+                   #add_module_declaration(current_block, module_name, st)
+               ]
+
+               module_implementation = 
+               [
+                   "@implementation " id:module_name Statement.compound_statement:st
+                   #add_module_implementation(current_block, module_name, st)
+               ]
 
 """
 
 @meta.hook(koocParser)
 def add_import(self, ast, file_to_import):
-    pass
     return True
 
 @meta.hook(koocParser)
-def add_module_declaration(self, ast, module_name):
+def add_module_declaration(self, ast, module_name, st):
     print("ok")
+    print(st)
     return True
 
 @meta.hook(koocParser)
-def add_module_implementation(self, ast, module_name):
-    pass
+def add_module_implementation(self, ast, module_name, st):
     return True
