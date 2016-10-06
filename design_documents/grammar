@@ -1,0 +1,6 @@
+
+
+
+declaration = [ kooc_declaration | cnorm.declaration ]
+
+kooc_declaration  = ['@' declaration_type:d_type
