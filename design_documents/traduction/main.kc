@@ -4,7 +4,6 @@
 int main()
 {
   printf("%d\n", [Test.a]);
-  printf("%f\n", [Test.a]);
   printf("%f\n", @!(float)[Test.a]);
 
   [Test.a] = 12;

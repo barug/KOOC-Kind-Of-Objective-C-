@@ -1,7 +1,11 @@
 _K[[size_namespace][namespace]*]E[R[size_return_name_types][return_name_type[[P]*]]A[nb_args]_[[size_name_args][name_args[[P]*]]*]
 				| T[size_return_name_types][return_name_type][[P]*]
 
-IF POINTEUR add a P to the end of the type name == [int *a = _K1aET3intP] 
+IF POINTEUR add a	P to the end of the type return_type_name == [int *a = _K1aET3intP] [char **c = _K1cET4charPP]
+
+IF GLOABAL add a	G to the end of the type return_type_name == [global int *a = _K1aET3intGP]
+
+IF INLINE add a		I to the end of the type return_type_name == [inline int toto() = _K4totoaER3intIA0_]
 
 namespace = [Test].h | void [main] () | 
 
@@ -23,8 +27,8 @@ class test
         _K4test1aET4float;
 }
 
-
-
-
-
-
+//!-!-!-!-!-!-!-!-!-!\\
+|Need to manage const |
+|Nedd to manage static|
+|Need to manage       |
+\\!-!-!-!-!-!-!-!-!-!//
