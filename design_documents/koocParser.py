@@ -31,8 +31,8 @@ class koocParser(Grammar, Declaration):
 
        module_declaration = 
        [
-           '@module ' id:module_name
-           #add_module_declaration(_, module_name)
+           '@module ' id:module_name Statement.compound_statement:st
+           #add_module_declaration(_, module_name, st)
        ]
 
        module_implementation = 
@@ -49,11 +49,14 @@ class koocParser(Grammar, Declaration):
 @meta.hook(koocParser)
 def add_import(self, ast, file_to_import):
     pass
+    return True
 
 @meta.hook(koocParser)
 def add_module_declaration(self, ast, module_name):
-    pass
+    print("ok")
+    return True
 
 @meta.hook(koocParser)
 def add_module_implementation(self, ast, module_name):
     pass
+    return True
