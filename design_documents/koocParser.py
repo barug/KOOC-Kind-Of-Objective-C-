@@ -18,21 +18,15 @@ class koocParser(Grammar, Declaration):
 
            kooc_declaration = 
            [
-               import_declaration
-               | module_declaration
+               module_declaration
                | module_implementation
            ]
-
-               import_declaration = 
-               [
-                   "@import \"" id:file_to_import "\"" 
-                   #add_import(current_block, file_to_import)
-               ]
 
                module_declaration = 
                [
                    "@module " id:module_name Statement.compound_statement:st
-                   #add_module_declaration(current_block, module_name, st)
+                   #module_declaration(current_block, module_name, st)
+                   #end_decl(current_block, decl
                ]
 
                module_implementation = 
