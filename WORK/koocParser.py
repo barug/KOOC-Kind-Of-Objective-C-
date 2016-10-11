@@ -62,4 +62,5 @@ def module_implementation(self, decl, module_name, st, ast):
 def module_import(self, decl, module_name, ast):
     decl = koocClasses.moduleImport(self.value(module_name))
     ast.ref.body.append(decl)
+    decl.translate()
     return True

@@ -1,4 +1,5 @@
 from pyrser.parsing.node import Node
+from cnorm import nodes
 
 class KoocNode(Node):
     pass
@@ -22,3 +23,8 @@ class moduleImplementation(KoocDeclaration):
 class moduleImport(KoocStatement):
     def __init__(self, moduleName):
         self.moduleName = moduleName
+
+    def translate(self):
+        decl = nodes.Raw
+        decl.value = "#include \"" + self.moduleName + ".h\"\n"
+        return (decl)
