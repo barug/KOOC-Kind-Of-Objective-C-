@@ -6,6 +6,9 @@ class KoocNode(Node):
 class KoocDeclaration(KoocNode):
     pass
 
+class KoocStatement(KoocNode):
+    pass
+
 class moduleDeclaration(KoocDeclaration):
     def __init__(self, moduleName, compoundDeclaration):
         self.moduleName = moduleName
@@ -16,6 +19,6 @@ class moduleImplementation(KoocDeclaration):
         self.moduleName = moduleName
         self.compoundDeclaration = compoundDeclaration
 
-class moduleImport(KoocDeclaration):
+class moduleImport(KoocStatement):
     def __init__(self, moduleName):
         self.moduleName = moduleName
