@@ -10,9 +10,8 @@ class moduleDeclaration(KoocDeclaration):
     def __init__(self, compoundDeclaration, moduleName):
         self.moduleName = moduleName
         self.compoundDeclaration = compoundDeclaration
-    def mangle(self):
         
-    
-
 class moduleImplementation(KoocDeclaration):
-    pass
+    def __init__(self, compoundDeclaration, moduleName):
+        self.moduleName = moduleName
+        self.compoundDeclaration = compoundDeclaration

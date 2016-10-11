@@ -5,7 +5,7 @@ from pyrser.grammar import Grammar
 from pyrser import meta
 from pyrser.parsing.node import Node
 from cnorm.parsing.declaration import Declaration
-
+import koocClasses
 
 class koocParser(Grammar, Declaration):
     entry = "translation_unit"
@@ -24,29 +24,28 @@ class koocParser(Grammar, Declaration):
 
                module_declaration = 
                [
+                   __scope__: decl
                    "@module " id:module_name Statement.compound_statement:st
-                   #module_declaration(current_block, module_name, st)
-                   #end_decl(current_block, decl
+                   #module_declaration(decl, module_name, st, current_block)
+
                ]
 
                module_implementation = 
                [
                    "@implementation " id:module_name Statement.compound_statement:st
-                   #add_module_implementation(current_block, module_name, st)
+                   #module_implementation(_, module_name, st)
+                   #end_decl(current_block, decl)
                ]
-
 """
 
 @meta.hook(koocParser)
-def add_import(self, ast, file_to_import):
+def module_declaration(self, decl, module_name, st, ast):
+    decl = koocClasses.moduleDeclaration(self.value(module_name), module_name)
+    print(decl)
+    ast.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
-def add_module_declaration(self, ast, module_name, st):
-    print("ok")
-    print(st)
-    return True
-
-@meta.hook(koocParser)
-def add_module_implementation(self, ast, module_name, st):
+def module_implementation(self, decl, module_name, st):
+    decl = koocClasses.moduleImplementation(self.value(module_name), module_name)
     return True
