@@ -32,16 +32,15 @@ class koocParser(Grammar, Declaration):
 
                module_implementation = 
                [
+                   __scope__: decl
                    "@implementation " id:module_name Statement.compound_statement:st
                    #module_implementation(_, module_name, st)
-                   #end_decl(current_block, decl)
                ]
 """
 
 @meta.hook(koocParser)
 def module_declaration(self, decl, module_name, st, ast):
-    decl = koocClasses.moduleDeclaration(self.value(module_name), module_name)
-    print(decl)
+    decl = koocClasses.moduleDeclaration(self.value(module_name), st)
     ast.ref.body.append(decl)
     return True
 
