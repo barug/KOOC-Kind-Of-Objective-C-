@@ -1,0 +1,16 @@
+@class StackInt
+{
+	@member
+	{
+		int	size;
+		int	nbitem;
+		void	init(int);
+		void	clean();
+		int	nbitem();
+	}
+	@member int *data;
+	@member void push(int);
+	int	pop(StackInt *);//pop fonction membre
+	/* pour compter le nombre de pile presente dans le systeme */
+	int	nbstack = 0;
+}
