@@ -2,8 +2,3 @@
 {
 	int i = 42;
 }
-
-@module Test2
-{
-	int i = 42;
-}
