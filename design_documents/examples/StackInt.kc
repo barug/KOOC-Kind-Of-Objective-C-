@@ -1,0 +1,51 @@
+@import "StackInt.kh"
+@implementation StackInt
+{
+	@member void init(int size)
+	{
+		int	*buf;
+		[self.nbitem] = 0;
+		[self.size] = size;
+		buf = (int *) calloc(size, sizeof(int));
+		[self.data] = buf;
+	}
+
+	@member
+	{
+		int	nbitem()
+		{
+			int n;
+			n = [self.nbitem];
+			return (n);
+		}
+	
+		void	push(int i)
+		{
+			int pos;
+			int *buf;
+			pos = [self.nbitem];
+			buf = [self.data];
+			buf[pos++] = i;
+			[self.nbitem] = pos;
+		}
+	}
+
+	int	pop(StackInt *self)
+	{
+		int *buf;
+		int pos;
+		int r;
+		pos = [self.nbitem];
+		buf = [self.data];
+		r = buf[pos--];
+		[self.nbitem] = pos;
+		return (r);
+	}
+
+	void	clean(StackInt *this)
+	{
+		int *buf;
+		buf = [this.data];
+		free(buf);
+	}
+}// fin @clas
