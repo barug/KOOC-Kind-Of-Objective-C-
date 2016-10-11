@@ -14,11 +14,11 @@ class moduleDeclaration(KoocDeclaration):
         self.moduleName = moduleName
         self.compoundDeclaration = compoundDeclaration
         
-class moduleImplementation(KoocStatement):
+class moduleImplementation(KoocDeclaration):
     def __init__(self, moduleName, compoundDeclaration):
         self.moduleName = moduleName
         self.compoundDeclaration = compoundDeclaration
 
-class moduleImport(KoocDeclaration):
+class moduleImport(KoocStatement):
     def __init__(self, moduleName):
         self.moduleName = moduleName
