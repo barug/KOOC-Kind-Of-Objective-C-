@@ -12,7 +12,7 @@ def     main():
         exit(0)
     parser = koocParser()
     ast = parser.parse_file(av[1])
-    print(ast)
+    print(ast.to_yml())
     ast.to_yml()
     print("OK")
     # # parser.inject_begin(ast)

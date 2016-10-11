@@ -1,0 +1,3 @@
+@implementation Test {
+  i = 42;
+}
