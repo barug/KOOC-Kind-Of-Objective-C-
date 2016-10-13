@@ -8,6 +8,7 @@ from cnorm.parsing.declaration import Declaration
 import koocClasses
 
 class koocParser(Grammar, Declaration):
+    
     entry = "translation_unit"
     grammar = """
        declaration =
