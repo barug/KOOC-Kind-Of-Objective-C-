@@ -23,7 +23,7 @@ class moduleDeclaration(KoocDeclaration):
 
     def translate(self):
         pass                    # code goes here
-        
+
 class moduleImplementation(KoocDeclaration):
     def __init__(self, moduleName, compoundDeclaration):
         self.moduleName = moduleName
@@ -40,3 +40,19 @@ class moduleImport(KoocStatement):
         decl = nodes.Raw
         decl.value = "#include \"" + self.moduleName + ".h\"\n"
         return (decl)
+
+class classDeclaration(KoocDeclaration):
+    def __init__(self, className, compoundDeclaration):
+        self.className = className
+        self.compoundDeclaration = compoundDeclaration
+
+    def translate(self):
+        pass
+
+class classMember(KoocDeclaration):
+    def __init__(self, className, compoundDeclaration):
+        self.className = className
+        self.compoundDeclaration = compoundDeclaration
+
+    def translate(self):
+        pass
