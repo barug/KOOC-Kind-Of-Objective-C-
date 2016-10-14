@@ -26,42 +26,40 @@ class koocParser(Grammar, Declaration):
 
                module_declaration = 
                [
-                   __scope__: decl
                    "@module " id:module_name Statement.compound_statement:st
-                   #module_declaration(decl, module_name, st, current_block)
+                   #add_module_declaration(module_name, st, current_block)
 
                ]
 
                module_implementation = 
                [
-                   __scope__: decl
                    "@implementation " id:module_name Statement.compound_statement:st
-                   #module_implementation(decl, module_name, st, current_block)
+                   #add_module_implementation(module_name, st, current_block)
                ]
 
                module_import = 
                [
-                   __scope__: decl
                    "@import " id:module_name".kh"
-                   #module_import(decl, module_name, current_block)
+                   #add_module_import(module_name, current_block)
                ]
+
 """
 
 @meta.hook(koocParser)
-def module_declaration(self, decl, module_name, st, ast):
+def add_module_declaration(self, module_name, st, current_block):
     decl = koocClasses.moduleDeclaration(self.value(module_name), st)
-    ast.ref.body.append(decl)
+    current_block.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
-def module_implementation(self, decl, module_name, st, ast):
+def add_module_implementation(self, module_name, st, current_block):
     decl = koocClasses.moduleImplementation(self.value(module_name), st)
-    ast.ref.body.append(decl)
+    current_block.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
-def module_import(self, decl, module_name, ast):
+def add_module_import(self, module_name, current_block):
     decl = koocClasses.moduleImport(self.value(module_name))
-    ast.ref.body.append(decl)
+    current_block.ref.body.append(decl)
     decl.translate()
     return True
