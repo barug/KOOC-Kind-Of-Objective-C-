@@ -51,16 +51,16 @@ class koocParser(Grammar, Declaration):
                ]
 
               class_statement =
-              [[
-               '{'
-                 __scope__:current_block
-                 #new_blockstmt(_, current_block)
-                 [
-                      line_of_code
-                      | class_member
-                 ]*
-                '}'
-              ]]
+              [
+                   '{'
+                   __scope__:current_block
+                   #new_blockstmt(_, current_block)
+                   [
+                        line_of_code
+                        | class_member
+                   ]*
+                   '}'
+              ]
 
               class_member =
               [
@@ -69,16 +69,21 @@ class koocParser(Grammar, Declaration):
               ]
 
               class_member_statement =
-              [[
-               '{'
-                 __scope__:current_block
-                 #new_blockstmt(_, current_block)
-                 [
-                      line_of_code
-                 ]*
-                '}'
-              ] |                  [__scope__:current_block
-                 #new_blockstmt(_, current_block) line_of_code]]
+              [
+                   [
+                       '{'
+                       __scope__:current_block
+                       #new_blockstmt(_, current_block)
+                       [
+                           line_of_code
+                       ]*
+                       '}'
+                   ] |
+                   [
+                   __scope__:current_block
+                   #new_blockstmt(_, current_block) line_of_code
+                   ]
+              ]
 
 
 """
