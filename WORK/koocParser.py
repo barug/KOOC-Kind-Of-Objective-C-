@@ -40,24 +40,39 @@ class koocParser(Grammar, Declaration):
 
                module_import =
                [
-                   "@import " id:module_name".kh"
+                   "@import " id:module_name ".kh"
                    #add_module_import(module_name, current_block)
                ]
 
                class_declaration =
                [
-                   "@class " id:class_name Statement.compound_statement:st
+                   "@class " id:class_name class_statement:st
                    #add_class_declaration(class_name, st, current_block)
-                   | class_member_declaration
                ]
 
+              class_statement =
+              [[
+               '{'
+                 __scope__:new_block
+                 #new_blockstmt(_, new_block)
+                 [
+                      line_of_code
+                 ]*
+                '}'
+              ]]
+
                class_member =
-               [
+               [ #ici(current_block)
                    "@member" Statement.compound_statement:st
                    #add_member_declaration(class_name, st, current_block)
                ]
 
 """
+
+@meta.hook(koocParser)
+def ici(self, current_block):
+    print ("ICIIIIII LAAAAAAAA")
+    return True
 
 @meta.hook(koocParser)
 def add_module_declaration(self, module_name, st, current_block):
@@ -85,7 +100,8 @@ def add_class_declaration(self, class_name, st, current_block):
     return True
 
 @meta.hook(koocParser)
-def add_class_member(self, class_name, st, current_block):
+def add_member_declaration(self, class_name, st, current_block):
+    print ("ENCOERLAAAAAAAA")
     decl = koocClasses.classMember(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True

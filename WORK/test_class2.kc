@@ -1,7 +1,14 @@
-@class TEST
+@module A
 {
-	@member
-	{
-		int b;
-	}
+  int a;
+}
+
+@implementation B
+{
+  int b;
+}
+
+@class C
+{
+  int c;
 }
