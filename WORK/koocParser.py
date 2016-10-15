@@ -89,11 +89,6 @@ class koocParser(Grammar, Declaration):
 """
 
 @meta.hook(koocParser)
-def ici(self, current_block):
-    print ("ICIIIIII LAAAAAAAA")
-    return True
-
-@meta.hook(koocParser)
 def add_module_declaration(self, module_name, st, current_block):
     decl = koocClasses.moduleDeclaration(self.value(module_name), st)
     current_block.ref.body.append(decl)
@@ -120,7 +115,6 @@ def add_class_declaration(self, class_name, st, current_block):
 
 @meta.hook(koocParser)
 def add_member_declaration(self, class_name, st, current_block):
-    print ("ENCOERLAAAAAAAA")
     decl = koocClasses.classMember(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
