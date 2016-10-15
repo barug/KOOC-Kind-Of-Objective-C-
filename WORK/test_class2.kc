@@ -14,6 +14,8 @@
   @member
     {
       int kk;
+      char * aa(int i, int j);
     }
   @member int KLup;
+  @member double tt(char c);
 }

@@ -6,14 +6,10 @@
 		void	mb_function();
 	}
 
-// variable non-membre
 int nonmember;
-//fonction non-membre
 void myNonMemberFunction();
-// variable membre
+
 @member int member;
-//fonction membre
 @member void myOtherMemberFunction();
-//autre ecriture de fonction membre
 void myOtherMemberFunction2(Test *);
 }
