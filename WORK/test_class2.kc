@@ -19,3 +19,11 @@
   @member int KLup;
   @member double tt(char c);
 }
+
+void main()
+{
+  int a;
+
+  printf("%c\n", a);
+   printf("%c\n", [Test.a]);
+}

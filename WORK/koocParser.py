@@ -5,6 +5,7 @@ from pyrser.grammar import Grammar
 from pyrser import meta
 from pyrser.parsing.node import Node
 from cnorm.parsing.declaration import Declaration
+from cnorm.parsing.expression import Expression
 import koocClasses
 
 class koocParser(Grammar, Declaration):
@@ -15,6 +16,14 @@ class koocParser(Grammar, Declaration):
        [
            Declaration.declaration
            | kooc_declaration
+       ]
+
+       primary_expression =
+       [
+          '(' expression:expr ')' #new_paren(_, expr)
+           | '[' expression:expr ']' #kooc_expression(_, expr)
+           | [ Literal.literal | identifier ]:>_
+
        ]
 
            kooc_declaration =
@@ -78,7 +87,7 @@ class koocParser(Grammar, Declaration):
                                        line_of_code
                                    ]*
                                    '}'
-                               ] 
+                               ]
                                | [
                                    __scope__:current_block
                                    #new_blockstmt(_, current_block) line_of_code
@@ -117,4 +126,9 @@ def add_class_declaration(self, class_name, st, current_block):
 def add_member_declaration(self, class_name, st, current_block):
     decl = koocClasses.classMember(self.value(class_name), st)
     current_block.ref.body.append(decl)
+    return True
+
+@meta.hook(koocParser)
+def kooc_expression(self, class_name, expr):
+    print(expr)
     return True
