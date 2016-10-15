@@ -11,4 +11,9 @@
 @class C
 {
   int c;
+  @member
+    {
+      int kk;
+    }
+  @member int KLup;
 }

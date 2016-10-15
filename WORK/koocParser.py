@@ -53,19 +53,33 @@ class koocParser(Grammar, Declaration):
               class_statement =
               [[
                '{'
-                 __scope__:new_block
-                 #new_blockstmt(_, new_block)
+                 __scope__:current_block
+                 #new_blockstmt(_, current_block)
                  [
                       line_of_code
+                      | class_member
                  ]*
                 '}'
               ]]
 
-               class_member =
-               [ #ici(current_block)
-                   "@member" Statement.compound_statement:st
+              class_member =
+              [
+                   "@member" class_member_statement:st
                    #add_member_declaration(class_name, st, current_block)
-               ]
+              ]
+
+              class_member_statement =
+              [[
+               '{'
+                 __scope__:current_block
+                 #new_blockstmt(_, current_block)
+                 [
+                      line_of_code
+                 ]*
+                '}'
+              ] |                  [__scope__:current_block
+                 #new_blockstmt(_, current_block) line_of_code]]
+
 
 """
 
