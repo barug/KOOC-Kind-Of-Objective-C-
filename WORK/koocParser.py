@@ -78,11 +78,11 @@ class koocParser(Grammar, Declaration):
                            line_of_code
                        ]*
                        '}'
-                   ] |
-                   [
-                   __scope__:current_block
-                   #new_blockstmt(_, current_block) line_of_code
-                   ]
+                   ] 
+                   | [
+                       __scope__:current_block
+                       #new_blockstmt(_, current_block) line_of_code
+                     ]
               ]
 
 
