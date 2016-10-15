@@ -50,40 +50,40 @@ class koocParser(Grammar, Declaration):
                    #add_class_declaration(class_name, st, current_block)
                ]
 
-              class_statement =
-              [
-                   '{'
-                   __scope__:current_block
-                   #new_blockstmt(_, current_block)
-                   [
-                        line_of_code
-                        | class_member
-                   ]*
-                   '}'
-              ]
-
-              class_member =
-              [
-                   "@member" class_member_statement:st
-                   #add_member_declaration(class_name, st, current_block)
-              ]
-
-              class_member_statement =
-              [
-                   [
+                  class_statement =
+                  [
                        '{'
                        __scope__:current_block
                        #new_blockstmt(_, current_block)
                        [
-                           line_of_code
+                            line_of_code
+                            | class_member
                        ]*
                        '}'
-                   ] 
-                   | [
-                       __scope__:current_block
-                       #new_blockstmt(_, current_block) line_of_code
-                     ]
-              ]
+                  ]
+
+                      class_member =
+                      [
+                           "@member" class_member_statement:st
+                           #add_member_declaration(class_name, st, current_block)
+                      ]
+
+                          class_member_statement =
+                          [
+                              [
+                                   '{'
+                                   __scope__:current_block
+                                   #new_blockstmt(_, current_block)
+                                   [
+                                       line_of_code
+                                   ]*
+                                   '}'
+                               ] 
+                               | [
+                                   __scope__:current_block
+                                   #new_blockstmt(_, current_block) line_of_code
+                                 ]
+                          ]
 
 
 """
