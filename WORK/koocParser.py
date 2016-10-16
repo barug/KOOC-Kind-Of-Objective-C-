@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 
 from pyrser.grammar import Grammar
@@ -99,36 +99,38 @@ class koocParser(Grammar, Declaration):
 
 @meta.hook(koocParser)
 def add_module_declaration(self, module_name, st, current_block):
-    decl = koocClasses.moduleDeclaration(self.value(module_name), st)
+    decl = koocClasses.ModuleDeclaration(self.value(module_name), st)
     current_block.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
 def add_module_implementation(self, module_name, st, current_block):
-    decl = koocClasses.moduleImplementation(self.value(module_name), st)
+    decl = koocClasses.ModuleImplementation(self.value(module_name), st)
     current_block.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
 def add_module_import(self, module_name, current_block):
-    decl = koocClasses.moduleImport(self.value(module_name))
+    decl = koocClasses.ModuleImport(self.value(module_name))
     current_block.ref.body.append(decl)
     decl.translate()
     return True
 
 @meta.hook(koocParser)
 def add_class_declaration(self, class_name, st, current_block):
-    decl = koocClasses.classDeclaration(self.value(class_name), st)
+    decl = koocClasses.ClassDeclaration(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
 def add_member_declaration(self, class_name, st, current_block):
-    decl = koocClasses.classMember(self.value(class_name), st)
+    decl = koocClasses.ClassMember(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
-def kooc_expression(self, class_name, expr):
-    print(expr)
+def kooc_expression(self, current_block, expression):
+    decl = koocClasses.KoocExpression(self.value(expression))
+    current_block.set(decl)
+    #current_block.ref.body.append(decl)
     return True
