@@ -61,8 +61,8 @@ class ClassMember(KoocDeclaration):
         pass
 
 class KoocExpression(KoocStatement):
-    def __init__(self, statement):
+    def __init__(self, statement, type):
         self.statement = statement
-    
+        self.type = type
     def translate(self):
         pass
