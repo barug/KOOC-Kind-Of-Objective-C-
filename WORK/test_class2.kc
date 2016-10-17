@@ -26,4 +26,5 @@ void main()
   [Test.b] = 123;
   printf("%c\n", a);
   printf("%c\n", [Test.a]);
+  printf("%c\n", [Test.func()]);
 }

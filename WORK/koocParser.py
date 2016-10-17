@@ -20,11 +20,14 @@ class koocParser(Grammar, Declaration):
 
        primary_expression =
        [
-          '(' expression:expr ')' #new_paren(_, expr)
-           | '[' expression:expr ']' #kooc_expression(_, expr)
-           | [ Literal.literal | identifier ]:>_
-
+           Expression.primary_expression:>_
+           | kooc_expression:>_
        ]
+
+           kooc_expression =
+           [
+              ["@!("Base.id:type #check_is_id(type) #check_taht_type(type) ')']? '[' expression:expr ']' #kooc_expression(_, expr)
+           ]
 
            kooc_declaration =
            [
@@ -79,15 +82,7 @@ class koocParser(Grammar, Declaration):
 
                           class_member_statement =
                           [
-                              [
-                                   '{'
-                                   __scope__:current_block
-                                   #new_blockstmt(_, current_block)
-                                   [
-                                       line_of_code
-                                   ]*
-                                   '}'
-                               ]
+                               Statement.compound_statement:>_
                                | [
                                    __scope__:current_block
                                    #new_blockstmt(_, current_block) line_of_code
@@ -133,4 +128,9 @@ def kooc_expression(self, current_block, expression):
     decl = koocClasses.KoocExpression(self.value(expression))
     current_block.set(decl)
     #current_block.ref.body.append(decl)
+    return True
+
+@meta.hook(koocParser)
+def check_taht_type(self, type):
+    print(type)
     return True
