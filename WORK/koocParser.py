@@ -89,7 +89,6 @@ class koocParser(Grammar, Declaration):
                                  ]
                           ]
 
-
 """
 
 @meta.hook(koocParser)
