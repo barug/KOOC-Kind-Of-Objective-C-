@@ -1,4 +1,10 @@
 @module Test {
-  int i;
+  int a;
+  char b;
+  int *c;
+  int **d;
+  int e[][];
   void f();
+  void e(int x, char z);
+  void lourd(int *x, char **h);
 }
