@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-   
+# -*- coding: utf-8 -*-
 
 from pyrser.parsing.node import Node
 from cnorm.parsing.declaration import Declaration
@@ -7,7 +7,7 @@ from cnorm.nodes import *
 from koocClasses import *
 
 class KoocTranslator:
-    
+
     def __init__(self):
         self.symbolTable = {}
 
@@ -31,21 +31,15 @@ class KoocTranslator:
             mangledName += "A" + str(len(declarationNode._ctype.params)) + "_"
             for param in declarationNode._ctype.params:
                 mangledName = self.add_mangled_type(param._ctype, mangledName)
-        print(mangledName)
+        # print(mangledName)
         declarationNode._name = mangledName
-
-    def translate_declaration(self, declarationNode):
-        for declaration in declarationNode.compoundDeclaration.body:
-            self.mangle_symbol(declarationNode.moduleName, declaration)
-        return declarationNode.compoundDeclaration.body
             
-    def translateKoocAst(self, node):
-        if (isinstance(node, KoocDeclaration)):
-            self.translate_declaration(node)
-        elif (hasattr(node, "body")):
-            for childNode in node.body:
-                self.translateKoocAst(childNode)
-        
-    def mangling(self,koocModule):
-        symbols = []
-        
+    def translateKoocAst(self, rootNode):
+        rootBodyCopy = rootNode.body[:]
+        for node in rootBodyCopy:
+            if (isinstance(node, KoocDeclaration)):
+                for declaration in node.compoundDeclaration.body:
+                    self.mangle_symbol(node.moduleName, declaration)
+                nodeIndex = rootNode.body.index(node)
+                rootNode.body[nodeIndex:nodeIndex] = node.compoundDeclaration.body
+                rootNode.body.remove(node)

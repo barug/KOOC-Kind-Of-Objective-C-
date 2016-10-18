@@ -1,0 +1,29 @@
+@module A
+{
+  int a;
+}
+
+@implementation B
+{
+  int b;
+}
+
+@class C
+{
+  int c;
+  @member
+    {
+      int kk;
+      char * aa(int i, int j);
+    }
+  @member int KLup;
+  @member double tt(char c);
+}
+
+void main()
+{
+  int a;
+  [Test.b] = 123;
+  printf("%c\n", a);
+  printf("%c\n", [Test.a]);
+}

@@ -1,0 +1,87 @@
+ICIIIIII LAAAAAAAA
+     type=RootBlockStmt:
+	body type=list:
+	    [ 0 ] type=Decl:
+		_ctype type=PrimaryType:
+		    _decltype
+		    _identifier str='int'
+		    _specifier int=0
+		    _storage int=0
+		_name str='a'
+	    [ 1 ] type=moduleDeclaration:
+		compoundDeclaration type=BlockStmt:
+		    body type=list:
+			[ 0 ] type=Decl:
+			    _ctype type=PrimaryType:
+				_decltype
+				_identifier str='int'
+				_specifier int=0
+				_storage int=0
+			    _name str='a'
+		    types type=ChainMap:
+			maps type=list:
+			    [ 0 ] type=dict:
+
+			    [ 1 ] type=dict:
+
+		moduleName str='A'
+	    [ 2 ] type=moduleImplementation:
+		compoundDeclaration type=BlockStmt:
+		    body type=list:
+			[ 0 ] type=Decl:
+			    _ctype type=PrimaryType:
+				_decltype
+				_identifier str='int'
+				_specifier int=0
+				_storage int=0
+			    _name str='b'
+		    types type=ChainMap:
+			maps type=list:
+			    [ 0 ] type=dict:
+
+			    [ 1 ] type=dict:
+
+		moduleName str='B'
+	    [ 3 ] type=moduleImport:
+		moduleName str='C'
+	    [ 4 ] type=Decl:
+		_ctype type=PrimaryType:
+		    _decltype
+		    _identifier str='int'
+		    _specifier int=0
+		    _storage int=0
+		_name str='c'
+	    [ 5 ] type=classMember:
+		className str='C'
+		compoundDeclaration type=BlockStmt:
+		    body type=list:
+			[ 0 ] type=Decl:
+			    _ctype type=PrimaryType:
+				_decltype
+				_identifier str='int'
+				_specifier int=0
+				_storage int=0
+			    _name str='kk'
+		    types type=ChainMap:
+			maps type=list:
+			    [ 0 ] type=dict:
+
+			    [ 1 ] type=dict:
+
+	    [ 6 ] type=classDeclaration:
+		className str='C'
+		compoundDeclaration type=BlockStmt:
+		    body type=list:
+
+		    types type=ChainMap:
+			maps type=list:
+			    [ 0 ] type=dict:
+
+			    [ 1 ] type=dict:
+
+	diagnostic type=Diagnostic:
+	    logs type=list:
+
+	types type=ChainMap:
+	    maps type=list:
+		[ 0 ] type=dict:
