@@ -28,7 +28,7 @@
       int ll;
       char * bb(int i, int j);
     }
-  @member int KLup;
+  @virtual int KLup;
   @member double tty(char c);
 }
 

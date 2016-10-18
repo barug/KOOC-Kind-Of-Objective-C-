@@ -58,6 +58,14 @@ class ClassMember(KoocDeclaration):
     def translate(self):
         pass
 
+class ClassVirtual(KoocDeclaration):
+    def __init__(self, className, compoundDeclaration):
+        self.className = className
+        self.compoundDeclaration = compoundDeclaration
+
+    def translate(self):
+        pass
+
 class VariableCall(KoocStatement) :
     def __init__(self, type, Kclass, attr):
         self.type = type

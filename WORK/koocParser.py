@@ -73,6 +73,7 @@ class koocParser(Grammar, Declaration):
                        [
                             line_of_code
                             | class_member
+                            | class_virtual
                        ]*
                        '}'
                   ]
@@ -91,6 +92,21 @@ class koocParser(Grammar, Declaration):
                                    #new_blockstmt(_, current_block) line_of_code
                                  ]
                           ]
+
+                      class_virtual =
+                      [
+                           "@virtual" class_virtual_statement:st
+                           #add_member_declaration(class_name, st, current_block)
+                      ]
+                          class_virtual_statement =
+                          [
+                               Statement.compound_statement:>_
+                               | [
+                                   __scope__:current_block
+                                   #new_blockstmt(_, current_block) line_of_code
+                                 ]
+                          ]
+
 
 """
 
@@ -128,6 +144,12 @@ def add_class_declaration(self, class_name, st, current_block):
 @meta.hook(koocParser)
 def add_member_declaration(self, class_name, st, current_block):
     decl = koocClasses.ClassMember(self.value(class_name), st)
+    current_block.ref.body.append(decl)
+    return True
+
+@meta.hook(koocParser)
+def add_virtual_declaration(self, class_name, st, current_block):
+    decl = koocClasses.ClassVirtual(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
 
