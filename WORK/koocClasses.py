@@ -7,17 +7,14 @@ from cnorm import nodes
 class KoocNode(Node):
     def translate(self):
         pass
-    pass
 
 class KoocDeclaration(KoocNode):
     def translate(self):
         pass
-    pass
 
 class KoocStatement(KoocNode):
     def translate(self):
         pass
-    pass
 
 class ModuleDeclaration(KoocDeclaration):
     def __init__(self, moduleName, compoundDeclaration):
@@ -45,9 +42,10 @@ class ModuleImport(KoocStatement):
         return (decl)
 
 class ClassDeclaration(KoocDeclaration):
-    def __init__(self, className, compoundDeclaration):
+    def __init__(self, className, compoundDeclaration, parent_class):
         self.className = className
         self.compoundDeclaration = compoundDeclaration
+        self.parent_class = parent_class
 
     def translate(self):
         pass

@@ -8,7 +8,7 @@
   int b;
 }
 
-@class C
+@class C : Toto
 {
   int c;
   @member
@@ -18,6 +18,18 @@
     }
   @member int KLup;
   @member double tt(char c);
+}
+
+@class D
+{
+  int d;
+  @member
+    {
+      int ll;
+      char * bb(int i, int j);
+    }
+  @member int KLup;
+  @member double tty(char c);
 }
 
 void main()
