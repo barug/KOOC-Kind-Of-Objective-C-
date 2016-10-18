@@ -26,7 +26,10 @@ class koocParser(Grammar, Declaration):
 
            kooc_expression =
            [
-              ["@!("Base.id:KoocType')'] '[' [expression|':']*:expr ']' #kooc_expression(_, expr, KoocType)
+              ["@!("Base.id:KoocType')'] [
+                                         '[' id:Kclass'.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
+                                         | '[' id:Kclass id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var)
+                                         ]
            ]
 
            kooc_declaration =
@@ -123,8 +126,15 @@ def add_member_declaration(self, class_name, st, current_block):
     return True
 
 @meta.hook(koocParser)
-def kooc_expression(self, current_block, expression, KoocType):
-    decl = koocClasses.KoocExpression(self.value(expression), self.value(KoocType))
+def kooc_var(self, current_block, type, Kclass, attr):
+    decl = koocClasses.VariableCall(self.value(type), self.value(Kclass), self.value(attr))
     current_block.set(decl)
-    #current_block.ref.body.append(decl)
+    # current_block.ref.body.append(decl)
+    return True
+
+@meta.hook(koocParser)
+def kooc_func(self, current_block, type, Kclass, func, var):
+    decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func), self.value(var))
+    current_block.set(decl)
+    # current_block.ref.body.append(decl)
     return True

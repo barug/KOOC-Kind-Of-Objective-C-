@@ -60,9 +60,26 @@ class ClassMember(KoocDeclaration):
     def translate(self):
         pass
 
-class KoocExpression(KoocStatement):
-    def __init__(self, statement, type):
-        self.statement = statement
+class VariableCall(KoocStatement) :
+    def __init__(self, type, Kclass, attr):
         self.type = type
+        self.Kclass = Kclass
+        self.attr = attr
+
+    def translate(self):
+        pass
+
+class FunctionCall(KoocStatement) :
+    def __init__(self, type, Kclass, func, var):
+        self.type = type
+        self.Kclass = Kclass
+        self.func = func
+        self.argv = []
+        var = var.split()
+        for arg in var :
+            pars = arg.split(')')
+            pars[0] = pars[0][2:]
+            self.argv.append(pars)
+
     def translate(self):
         pass
