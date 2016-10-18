@@ -23,7 +23,9 @@
 void main()
 {
   int a;
-  [Test.b] = 123;
+  @!(void)[Test.b] = 123;
   printf("%c\n", a);
-  printf("%c\n", [Test.a]);
+  printf("%c\n", @!(int)[Test.a]);
+  printf("%c\n", @!(double)[Test func()]);
+  printf("%c\n", @!(double)[Test toto :(int)c :(char)toto]);
 }
