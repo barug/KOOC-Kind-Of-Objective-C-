@@ -11,25 +11,35 @@ class KoocTranslator:
     def __init__(self):
         self.symbolTable = {}
 
+    def add_mangled_type(self, ctype, mangledName):
+        mangledName += str(len(ctype._identifier)) + ctype._identifier
+        decltype = ctype._decltype
+        while decltype:
+            mangledName += 'P'
+            decltype = decltype._decltype
+        return mangledName
+
     def mangle_symbol(self, moduleName, declarationNode):
-        print("enter mangle")
-        # mangledName = "_K" + str(len(moduleName)) + moduleName \
-        # + str(len(declarationNode._name)) + declarationNode._name
-        # if (isinstance(declarationNode._ctype, PrimaryType)):
-        #     print("primary")
-        # if (isinstance(declarationNode._ctype, FuncType)):
-        #     print("func")
-
-    def translateKoocAst(self, node):
-        pass
-        # if (isinstance(node, KoocDeclaration)):
-        #     print("isInstance")
-        #     print(node)
-        #     for declaration in node.compoundDeclaration.body:
-        #         self.mangle_symbol(node.moduleName, declaration)
-        # elif (hasattr(node, "body")):
-        #     for childNode in node.body:
-        #         self.translateKoocAst(childNode)
-
-    def mangling(self,koocModule):
-        symbols = []
+        mangledName = "_K" + str(len(moduleName)) + moduleName \
+        + str(len(declarationNode._name)) + declarationNode._name
+        if (type(declarationNode._ctype) is PrimaryType):
+            mangledName += "T"
+            mangledName = self.add_mangled_type(declarationNode._ctype, mangledName)
+        if (type(declarationNode._ctype) is FuncType):
+            mangledName += "R"
+            mangledName = self.add_mangled_type(declarationNode._ctype, mangledName)
+            mangledName += "A" + str(len(declarationNode._ctype.params)) + "_"
+            for param in declarationNode._ctype.params:
+                mangledName = self.add_mangled_type(param._ctype, mangledName)
+        # print(mangledName)
+        declarationNode._name = mangledName
+            
+    def translateKoocAst(self, rootNode):
+        rootBodyCopy = rootNode.body[:]
+        for node in rootBodyCopy:
+            if (isinstance(node, KoocDeclaration)):
+                for declaration in node.compoundDeclaration.body:
+                    self.mangle_symbol(node.moduleName, declaration)
+                nodeIndex = rootNode.body.index(node)
+                rootNode.body[nodeIndex:nodeIndex] = node.compoundDeclaration.body
+                rootNode.body.remove(node)
