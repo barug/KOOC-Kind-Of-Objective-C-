@@ -1,43 +1,6 @@
-@module A
-{
-  int a;
-}
-
-@implementation B
-{
-  int b;
-}
-
-@class C : Toto
-{
-  int c;
-  @member
-    {
-      int kk;
-      char * aa(int i, int j);
-    }
-  @member int KLup;
-  @member double tt(char c);
-}
-
 @class D
 {
-  int d;
-  @member
-    {
-      int ll;
-      char * bb(int i, int j);
-    }
-  @virtual int KLup;
-  @member double tty(char c);
-}
-
-void main()
-{
-  int a;
-  @!(void)[Test.b] = 123;
-  printf("%c\n", a);
-  printf("%c\n", @!(int)[Test.a]);
-  printf("%c\n", @!(double)[Test func]);
-  printf("%c\n", @!(double)[Test toto :(int)c :(char)toto]);
+  void my_func();
+  int my_func();
+  int my_func(int a);
 }

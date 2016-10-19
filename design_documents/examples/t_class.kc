@@ -12,4 +12,15 @@ void myNonMemberFunction();
 @member int member;
 @member void myOtherMemberFunction();
 void myOtherMemberFunction2(Test *);
+
+ @virtual void clean();
+ @virtual T pouet(R);
+
+}
+
+@class Test2 : Test
+{
+ @virtual void clean();
+ @virtual T pouet(R);
+ @virtual Z boum(P);
 }
