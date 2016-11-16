@@ -3,4 +3,5 @@
   void my_func();
   int my_func();
   int my_func(int a);
+  @!(int)[A.i];
 }
