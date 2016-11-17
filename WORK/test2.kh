@@ -3,8 +3,13 @@
   char b;
   int *c;
   int **d;
-  int e[][];
   void f();
   void e(int x, char z);
   void lourd(int *x, char **h);
 }
+
+@module TestAgain {
+  int testAgainInt;
+  char testAgainChar;
+}
+

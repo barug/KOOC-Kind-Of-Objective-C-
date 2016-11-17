@@ -1,13 +1,5 @@
-#include <stdio.h>
-int a = 12;
-
 @module Test
 {
 	int i = 42;
+	int function(char character, void * pointer[]);
 }
-
-int main(int ac, char **av)
-{
-    printf("%d\n", a);
-}
-

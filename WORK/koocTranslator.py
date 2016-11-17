@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import copy
 from pyrser.parsing.node import Node
 from cnorm.parsing.declaration import Declaration
 from cnorm.nodes import *
@@ -35,11 +36,12 @@ class KoocTranslator:
         declarationNode._name = mangledName
             
     def translateKoocAst(self, rootNode):
-        rootBodyCopy = rootNode.body[:]
-        for node in rootBodyCopy:
-            if (isinstance(node, KoocDeclaration)):
+        newRootBody = []
+        for node in rootNode.body:
+            if (isinstance(node, ModuleDeclaration)):
                 for declaration in node.compoundDeclaration.body:
                     self.mangle_symbol(node.moduleName, declaration)
-                nodeIndex = rootNode.body.index(node)
-                rootNode.body[nodeIndex:nodeIndex] = node.compoundDeclaration.body
-                rootNode.body.remove(node)
+                newRootBody.extend(node.compoundDeclaration.body)
+            else:
+                newRootBody.append(node)
+        rootNode.body = newRootBody
