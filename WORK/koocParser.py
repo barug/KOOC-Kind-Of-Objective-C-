@@ -20,12 +20,12 @@ class koocParser(Grammar, Declaration):
 
        primary_expression =
        [
-           Expression.primary_expression:>_
+           Declaration.primary_expression:>_
            | kooc_expression:>_
        ]
 
            kooc_expression =
-           [
+           [ //type name
               ["@!("Base.id:KoocType')'] [
                                          '[' id:Kclass'.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
                                          | '[' id:Kclass id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var)
