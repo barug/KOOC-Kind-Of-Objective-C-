@@ -1,10 +1,13 @@
 @module Test {
   int a;
   char b;
-  int *c;
-  int **d;
-  int e[][];
-  void f();
   void e(int x, char z);
   void lourd(int *x, char **h);
+}
+
+@class D
+{
+  void my_func();
+  int my_func();
+  int my_func(int a);
 }

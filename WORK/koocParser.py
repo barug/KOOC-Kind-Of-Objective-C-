@@ -6,6 +6,7 @@ from pyrser import meta
 from pyrser.parsing.node import Node
 from cnorm.parsing.declaration import Declaration
 from cnorm.parsing.expression import Expression
+from weakref import ref
 import koocClasses
 
 class koocParser(Grammar, Declaration):
@@ -17,7 +18,7 @@ class koocParser(Grammar, Declaration):
            Declaration.declaration
            | kooc_declaration
        ]
-
+ 
        primary_expression =
        [
            Declaration.primary_expression:>_
@@ -27,8 +28,8 @@ class koocParser(Grammar, Declaration):
            kooc_expression =
            [ //type name
               ["@!("Base.id:KoocType')'] [
-                                         '[' id:Kclass'.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
-                                         | '[' id:Kclass id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var)
+                                             '[' id:Kclass'.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
+                                         |   '[' id:Kclass id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var)
                                          ]
            ]
 
@@ -55,7 +56,7 @@ class koocParser(Grammar, Declaration):
 
                module_import =
                [
-                   "@import " id:module_name ".kh"
+                   "@import " '\"' id:module_name '.' "kh" '\"'
                    #add_module_import(module_name, current_block)
                ]
 
@@ -111,6 +112,11 @@ class koocParser(Grammar, Declaration):
 """
 
 @meta.hook(koocParser)
+def prints(self):
+    print("OK")
+    return True
+
+@meta.hook(koocParser)
 def add_module_declaration(self, module_name, st, current_block):
     decl = koocClasses.ModuleDeclaration(self.value(module_name), st)
     current_block.ref.body.append(decl)
@@ -124,9 +130,11 @@ def add_module_implementation(self, module_name, st, current_block):
 
 @meta.hook(koocParser)
 def add_module_import(self, module_name, current_block):
-    decl = koocClasses.ModuleImport(self.value(module_name))
+    ast = koocParser().parse_file(self.value(module_name) + ".kh")
+    decl = koocClasses.ModuleImport(self.value(module_name), ast)
     current_block.ref.body.append(decl)
-    decl.translate()
+    for types, ref in ast.types.items():
+        current_block.ref.types[types] = ref
     return True
 
 @meta.hook(koocParser)
@@ -139,6 +147,7 @@ def add_class_declaration_prt(self, class_name, st, current_block, parent_class)
 def add_class_declaration(self, class_name, st, current_block):
     decl = koocClasses.ClassDeclaration(self.value(class_name), st, None)
     current_block.ref.body.append(decl)
+    current_block.ref.types[self.value(class_name)] = ref(decl)
     return True
 
 @meta.hook(koocParser)

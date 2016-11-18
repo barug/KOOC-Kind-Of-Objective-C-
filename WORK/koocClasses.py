@@ -33,13 +33,12 @@ class ModuleImplementation(KoocDeclaration):
         pass                    # code goes here
 
 class ModuleImport(KoocStatement):
-    def __init__(self, moduleName):
-        self.moduleName = moduleName
+    def __init__(self, moduleName, ast):
+        self.moduleName = "@import \"" + moduleName + ".kh\"\n"
+        self.ast = ast
 
     def translate(self):
-        decl = nodes.Raw
-        decl.value = "#include \"" + self.moduleName + ".h\"\n"
-        return (decl)
+        pass
 
 class ClassDeclaration(KoocDeclaration):
     def __init__(self, className, compoundDeclaration, parent_class):
