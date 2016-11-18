@@ -18,7 +18,7 @@ class KoocStatement(KoocNode):
 
 class ModuleDeclaration(KoocDeclaration):
     def __init__(self, moduleName, compoundDeclaration):
-        self.moduleName = moduleName
+        self._name = moduleName
         self.compoundDeclaration = compoundDeclaration
 
     def translate(self):
@@ -41,8 +41,8 @@ class ModuleImport(KoocStatement):
         pass
 
 class ClassDeclaration(KoocDeclaration):
-    def __init__(self, className, compoundDeclaration, parent_class):
-        self.className = className
+    def __init__(self, className, compoundDeclaration, parent_class = None):
+        self._name = className
         self.compoundDeclaration = compoundDeclaration
         self.parent_class = parent_class
 

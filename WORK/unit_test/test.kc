@@ -1,0 +1,5 @@
+@module Test
+{
+	int i = 42;
+	int function(char character, void * pointer[]);
+}
