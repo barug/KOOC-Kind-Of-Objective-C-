@@ -24,9 +24,9 @@ class koocParser(Grammar, Declaration):
            Declaration.primary_expression:>_
            | kooc_expression:>_
        ]
-
-           kooc_expression =
-           [ //type name
+                               //////////////\\\\\\\\\\\\\\
+           kooc_expression =  /// replace id by type name \\
+           [                 ////////////////\\\\\\\\\\\\\\\\ 
               ["@!("Base.id:KoocType')'] [
                                              '[' id:Kclass'.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
                                          |   '[' id:Kclass id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var)
@@ -53,8 +53,9 @@ class koocParser(Grammar, Declaration):
                    "@implementation " id:module_name Statement.compound_statement:st
                    #add_module_implementation(module_name, st, current_block)
                ]
-
-               module_import =
+                                //////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+               module_import = //error with import like @import "directory/include.h"\\
+                              ////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
                [
                    "@import " '\"' id:module_name '.' "kh" '\"'
                    #add_module_import(module_name, current_block)
@@ -141,6 +142,7 @@ def add_module_import(self, module_name, current_block):
 def add_class_declaration_prt(self, class_name, st, current_block, parent_class):
     decl = koocClasses.ClassDeclaration(self.value(class_name), st, self.value(parent_class))
     current_block.ref.body.append(decl)
+    # current_block.ref.types[self.value(class_name)] = ref(decl) ?
     return True
 
 @meta.hook(koocParser)
