@@ -173,12 +173,13 @@ def kooc_var(self, current_block, type, Kclass, attr):
 
 @meta.hook(koocParser)
 def kooc_func(self, current_block, type, Kclass, func, var):
-    # tcheck if Kclass in tab of type
-# if not return False
     decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func), self.value(var))
     current_block.set(decl)
     # current_block.ref.body.append(decl)
     return True
 
 @meta.hook(koocParser)
-def check_class(_, Kclass)
+def check_class(self, current_block, koocClasse):
+    #if not koocClasse in scope:Type :
+    # return false
+    return True
