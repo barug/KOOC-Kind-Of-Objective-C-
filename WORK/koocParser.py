@@ -9,9 +9,9 @@ from cnorm.parsing.expression import Expression
 from weakref import ref
 import koocClasses
 
+imported_module = []
 
-
-class koocParser(Grammar, Declaration):
+class KoocParser(Grammar, Declaration):
 
     entry = "translation_unit"
     grammar = """
@@ -112,73 +112,74 @@ class koocParser(Grammar, Declaration):
 
 """
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def prints(self):
     print("OK")
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def add_module_declaration(self, module_name, st, current_block):
     decl = koocClasses.ModuleDeclaration(self.value(module_name), st)
     current_block.ref.body.append(decl)
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def add_module_implementation(self, module_name, st, current_block):
     decl = koocClasses.ModuleImplementation(self.value(module_name), st)
     current_block.ref.body.append(decl)
+    imported_module.append("OK")
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def add_module_import(self, module_name, current_block):
-    ast = koocParser().parse_file(self.value(module_name) + ".kh")
+    ast = KoocParser().parse_file(self.value(module_name) + ".kh")
     decl = koocClasses.ModuleImport(self.value(module_name), ast)
     current_block.ref.body.append(decl)
     for types, ref in ast.types.items():
         current_block.ref.types[types] = ref
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def add_class_declaration_prt(self, class_name, st, current_block, parent_class):
     decl = koocClasses.ClassDeclaration(self.value(class_name), st, self.value(parent_class))
     current_block.ref.body.append(decl)
     current_block.ref.types[self.value(class_name)] = ref(decl)
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def add_class_declaration(self, class_name, st, current_block):
     decl = koocClasses.ClassDeclaration(self.value(class_name), st, None)
     current_block.ref.body.append(decl)
     current_block.ref.types[self.value(class_name)] = ref(decl)
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def add_member_declaration(self, class_name, st, current_block):
     decl = koocClasses.ClassMember(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def add_virtual_declaration(self, class_name, st, current_block):
     decl = koocClasses.ClassVirtual(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def kooc_var(self, current_block, type, Kclass, attr):
     decl = koocClasses.VariableCall(self.value(type), self.value(Kclass), self.value(attr))
     current_block.set(decl)
     # current_block.ref.body.append(decl)
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def kooc_func(self, current_block, type, Kclass, func, var):
     decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func), self.value(var))
     current_block.set(decl)
     # current_block.ref.body.append(decl)
     return True
 
-@meta.hook(koocParser)
+@meta.hook(KoocParser)
 def check_class(self, current_block, koocClasse):
     #if not koocClasse in scope:Type :
     # return false
