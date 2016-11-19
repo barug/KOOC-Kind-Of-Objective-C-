@@ -56,6 +56,7 @@ class KoocTranslator:
         self.moduleTable.addModule(classNode._name)
         structName = "_" + classNode._name + "_instance_struct_"
         instanceStructNode = nodes.Decl(structName)
+        self.newRootBody.append(instanceStructNode)
         ctype = nodes.ComposedType(structName)
         instanceStructNode._ctype = ctype
         ctype._storage = Storages.TYPEDEF
@@ -73,20 +74,23 @@ class KoocTranslator:
                                                              KoocModuleTable.MEMBER)
             for key, symbolList in SymbolLists.items():
                 for symbol in symbolList:
-                    ctype.fields.append(symbol)
+                    if not isinstance(symbol._ctype, nodes.FuncType):
+                        ctype.fields.append(symbol)
         for declaration in classNode.compoundDeclaration.body:
             if isinstance(declaration, ClassMember):
                 for member in declaration.compoundDeclaration.body:
                     unMangledName = member._name
                     self.mangle_symbol(classNode._name,
                                        member)
-                    if isinstance(member._ctype, FuncType):
-                        member._ctype.params.insert(0, selfNode)
                     self.moduleTable.addSymbol(classNode._name,
                                                unMangledName,
                                                member,
                                                KoocModuleTable.MEMBER)
-                ctype.fields.append(member)
+                    if isinstance(member._ctype, FuncType):
+                        member._ctype.params.insert(0, selfNode)
+                        self.newRootBody.append(member)
+                    else:
+                        ctype.fields.append(member)
             else:
                 unMangledName = declaration._name
                 self.mangle_symbol(classNode._name,
@@ -96,7 +100,27 @@ class KoocTranslator:
                                            declaration,
                                            KoocModuleTable.NON_MEMBER)
                 self.newRootBody.append(declaration)
-        self.newRootBody.append(instanceStructNode)
+
+        allocName = "_" + classNode._name + "_alloc_";
+        allocNode = nodes.Decl(allocName, nodes.FuncType(structName))
+        allocNode._ctype._decltype = nodes.PointerType()
+        allocBody = []
+        instanceDeclNode = nodes.Decl("newInstance", nodes.PrimaryType(structName))
+        instanceDeclNode._ctype._decltype = PointerType()
+        mallocNode = nodes.Func(nodes.Id("malloc"),
+                                [nodes.Sizeof(nodes.Id("sizeof"),
+                                              [nodes.PrimaryType(structName)])])
+        instanceDeclNode._assign_expr = mallocNode
+        allocBody.append(instanceDeclNode)
+        allocBody.append(nodes.Return(nodes.Id("newInstance")))
+        allocNode.body = nodes.BlockStmt(allocBody)
+        print(instanceDeclNode.to_yml())
+        print(allocNode.to_yml())
+        self.moduleTable.addSymbol(classNode._name,
+                                   "alloc",
+                                   allocName,
+                                   KoocModuleTable.NON_MEMBER)
+        self.newRootBody.append(allocNode)
         
         
         

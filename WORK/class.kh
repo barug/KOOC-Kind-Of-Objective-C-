@@ -1,0 +1,17 @@
+
+@class baseClass {
+       void *baseClassVariable;
+       @member {
+       char baseClassMember;
+       int baseClassFunction();
+       }      
+}
+
+@class testClass : baseClass {
+       int classVariable;
+
+       @member {
+       int memberVariable;
+       void memberFunction(int arg1, char arg2);
+       }      
+}

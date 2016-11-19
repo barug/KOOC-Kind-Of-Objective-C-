@@ -1,12 +1,23 @@
 
 /* int a; */
 /* int *b; */
-int **c;
+/* int **c; */
 /* int d[]; */
 /* int *e[]; */
 /* int f[][]; */
 /* void e(); */
-void f(void *a, char b);
+/* void e(void *a, char b); */
+
+int e()
+{
+  int *a = malloc();
+}
+
+int *f(void *a, char b)
+{
+  int *a = malloc(sizeof(int));
+  return a;
+}
 /* void (*e)(); */
 /* void (*f)(int a, int b); */
 
