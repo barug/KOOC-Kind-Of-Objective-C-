@@ -1,0 +1,16 @@
+@import "test_import_implementation_module_classe.kh"
+
+typedef int  cest;
+typedef char  un;
+typedef void  test;
+
+@implementation Test {
+  a = 42;
+  b = '4';
+  void f() { return (0); }
+}
+
+@implementation D {
+  void my_func() { return; }
+  int  my_func() { return(0); }
+}

@@ -1,18 +1,18 @@
 @module Test {
   int a;
   char a;
-  float a;
-  char b;
-  float b;
-  int *c;
-  int **d;
-  void f();
   void e(int x, char z);
   void lourd(int *x, char **h);
+}
+
+@class D
+{
+  void my_func();
+  int my_func();
+  int my_func(int a);
 }
 
 @module TestAgain {
   int testAgainInt;
   char testAgainChar;
 }
-

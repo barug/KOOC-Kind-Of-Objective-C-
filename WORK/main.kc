@@ -1,7 +1,0 @@
-#include	<stdio.h>
-@import test2.kh
-
-void main()
-{
-  printf("%d\n", Test.i);
-}
