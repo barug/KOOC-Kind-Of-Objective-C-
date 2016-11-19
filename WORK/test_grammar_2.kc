@@ -1,0 +1,8 @@
+void main()
+{
+int a;
+a = 1;
+@!(int)[A f :"toto toto" :"tutu"];
+
+printf("toto toto", @!(int)[A f :2]);
+}

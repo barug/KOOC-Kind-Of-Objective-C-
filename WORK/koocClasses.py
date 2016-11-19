@@ -20,7 +20,7 @@ class ModuleDeclaration(KoocDeclaration):
 
 class ModuleImplementation(KoocDeclaration):
     def __init__(self, moduleName, compoundDeclaration):
-        self.moduleName = moduleName
+        self._name = moduleName
         self.compoundDeclaration = compoundDeclaration
 
 class ModuleImport(KoocStatement):
@@ -56,8 +56,11 @@ class FunctionCall(KoocStatement) :
         self.Kclass = Kclass
         self.func = func
         self.argv = []
-        var = var.split()
+        print (var)
+        var = var.split(':')
         for arg in var :
-            pars = arg.split(')')
-            pars[0] = pars[0][2:]
-            self.argv.append(pars)
+            if (arg != '') :
+                print ('[' + arg + ']')
+            # pars = arg.split(')')
+            # pars[0] = pars[0][1:]
+                self.argv.append(arg)

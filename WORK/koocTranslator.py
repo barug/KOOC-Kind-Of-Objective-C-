@@ -42,15 +42,52 @@ class KoocTranslator:
         declarationNode._name = mangledName
 
     def translateModule(self, moduleNode):
-        self.moduleTable.addModule(node._name)        
-        for declaration in node.compoundDeclaration.body:
+        self.moduleTable.addModule(moduleNode._name)        
+        for declaration in moduleNode.compoundDeclaration.body:
             unMangledName = declaration._name
-            self.mangle_symbol(node._name,
+            self.mangle_symbol(moduleNode._name,
                                declaration)
-            self.moduleTable.addSymbol(node._name,
+            if (type(declaration._ctype) is PrimaryType):
+                declaration._ctype._storage = Storages.EXTERN
+                if (hasattr(declaration, "_assign_expr")):
+                    declaration._koocVarVal = declaration._assign_expr
+                    delattr(declaration, "_assign_expr")
+            self.moduleTable.addSymbol(moduleNode._name,
                                        unMangledName,
-                                       declaration)
+                                       declaration,
+                                       KoocModuleTable.NON_MEMBER)
             self.newRootBody.append(declaration)
+
+    def translateImplementation(self, implementationNode):
+        nonMembers = self.moduleTable.getAllSymbolLists(implementationNode._name,
+                                                        KoocModuleTable.NON_MEMBER)
+        for memberName, symbolList in nonMembers.items():
+            for symbol in symbolList:
+                if (type(symbol._ctype) is PrimaryType):
+                    variableImpl = copy.deepcopy(symbol)
+                    variableImpl._assign_expr = variableImpl._koocVarVal
+                    variableImpl._ctype._storage = Storages.AUTO
+                    self.newRootBody.append(variableImpl)
+        for implementation in implementationNode.compoundDeclaration.body:
+            self.mangle_symbol(implementationNode._name,
+                               implementation)
+            self.newRootBody.append(implementation)
+            
+            
+
+    # def translateImplementation(self, implementationModule):
+    #     self.moduleTable.addModule(moduleNode._name)        
+    #     for declaration in moduleNode.compoundDeclaration.body:
+    #         unMangledName = declaration._name
+    #         self.mangle_symbol(moduleNode._name,
+    #                            declaration)
+    #         if (isinstance(declaration._ctype, PrimaryType)):
+    #             declaration._ctype._storage = Storages.EXTERN
+    #         self.moduleTable.addSymbol(moduleNode._name,
+    #                                    unMangledName,
+    #                                    declaration,
+    #                                    KoocModuleTable.MEMBER)
+    #         self.newRootBody.append(declaration)
             
     def translateClass(self, classNode):
         self.moduleTable.addModule(classNode._name)
@@ -95,6 +132,8 @@ class KoocTranslator:
                 unMangledName = declaration._name
                 self.mangle_symbol(classNode._name,
                                    declaration)
+                if (isinstance(declaration, nodes.PrimaryType)):
+                    declaration._storage = Storages.EXTERN
                 self.moduleTable.addSymbol(classNode._name,
                                            unMangledName,
                                            declaration,
@@ -122,14 +161,20 @@ class KoocTranslator:
                                    KoocModuleTable.NON_MEMBER)
         self.newRootBody.append(allocNode)
         
-        
-        
+    def translateKoocExpression(self, expressionNode):
+        pass
+
+    def searchKoocExpression(self, scope):
+        pass
+
     def translateKoocAst(self, rootNode):
         for node in rootNode.body:
             if isinstance(node, ModuleDeclaration):
                 self.translateModule(node)
             elif isinstance(node, ClassDeclaration):
                 self.translateClass(node)
+            elif isinstance(node, ModuleImplementation):
+                self.translateImplementation(node)
             else:
                 self.newRootBody.append(node)
         rootNode.body = self.newRootBody

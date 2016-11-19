@@ -26,12 +26,12 @@ class KoocParser(Grammar, Declaration):
            Declaration.primary_expression:>_
            | kooc_expression:>_
        ]
-                               //////////////\\\\\\\\\\\\\\
+
            kooc_expression =  /// replace id by type name \\
-           [                 ////////////////\\\\\\\\\\\\\\\\
+           [
               ["@!("Base.id:KoocType')'] '[' id:Kclass #check_class(_, Kclass)
                                     [ '.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
-                                    | id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var) ]
+                                    | id:func [ ':' [ primary_expression:>_ ] ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var) ]
            ]
 
            kooc_declaration =
