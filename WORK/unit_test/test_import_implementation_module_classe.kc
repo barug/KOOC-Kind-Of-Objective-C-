@@ -1,4 +1,4 @@
-@import "test_import_implementation_module_classe.kh"
+@import "unit_test/test_import_implementation_module_classe.kh"
 
 typedef int  cest;
 typedef char  un;
@@ -13,4 +13,9 @@ typedef void  test;
 @implementation D {
   void my_func() { return; }
   int  my_func() { return(0); }
+}
+
+int main()
+{
+ D decl_class;
 }
