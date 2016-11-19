@@ -26,7 +26,7 @@ class ModuleDeclaration(KoocDeclaration):
 
 class ModuleImplementation(KoocDeclaration):
     def __init__(self, moduleName, compoundDeclaration):
-        self.moduleName = moduleName
+        self._name = moduleName
         self.compoundDeclaration = compoundDeclaration
 
     def translate(self):
