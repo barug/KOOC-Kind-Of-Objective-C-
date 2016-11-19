@@ -9,6 +9,8 @@ from cnorm.parsing.expression import Expression
 from weakref import ref
 import koocClasses
 
+
+
 class koocParser(Grammar, Declaration):
 
     entry = "translation_unit"
@@ -27,10 +29,9 @@ class koocParser(Grammar, Declaration):
                                //////////////\\\\\\\\\\\\\\
            kooc_expression =  /// replace id by type name \\
            [                 ////////////////\\\\\\\\\\\\\\\\
-              ["@!("Base.id:KoocType')'] [
-                                             '[' id:Kclass'.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
-                                         |   '[' id:Kclass id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var)
-                                         ]
+              ["@!("Base.id:KoocType')'] '[' id:Kclass #check_class(_, Kclass)
+                                    [ '.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
+                                    | id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var) ]
            ]
 
            kooc_declaration =
@@ -141,7 +142,7 @@ def add_module_import(self, module_name, current_block):
 def add_class_declaration_prt(self, class_name, st, current_block, parent_class):
     decl = koocClasses.ClassDeclaration(self.value(class_name), st, self.value(parent_class))
     current_block.ref.body.append(decl)
-    # current_block.ref.types[self.value(class_name)] = ref(decl) ?
+    current_block.ref.types[self.value(class_name)] = ref(decl)
     return True
 
 @meta.hook(koocParser)
@@ -172,7 +173,12 @@ def kooc_var(self, current_block, type, Kclass, attr):
 
 @meta.hook(koocParser)
 def kooc_func(self, current_block, type, Kclass, func, var):
+    # tcheck if Kclass in tab of type
+# if not return False
     decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func), self.value(var))
     current_block.set(decl)
     # current_block.ref.body.append(decl)
     return True
+
+@meta.hook(koocParser)
+def check_class(_, Kclass)
