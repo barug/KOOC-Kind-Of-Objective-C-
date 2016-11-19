@@ -29,10 +29,16 @@ class KoocParser(Grammar, Declaration):
 
            kooc_expression =  /// replace id by type name \\
            [
-              ["@!("Base.id:KoocType')'] '[' id:Kclass #check_class(_, Kclass)
+              [ "@!("Base.id:KoocType')'] '[' id:Kclass #check_class(_, Kclass)
                                     [ '.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
-                                    | id:func [ ':' [ primary_expression:>_ ] ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var) ]
+                                    | id:func [ ':' [ arg_list?:var ]  ']' #kooc_func(_, KoocType, Kclass, func, var) ] ]
            ]
+
+           arg_list = [
+           assignement_expression:a #new_arg(_, a)
+           [   ':'
+               assignement_expression:a #new_arg(_, a)
+           ]* ]
 
            kooc_declaration =
            [

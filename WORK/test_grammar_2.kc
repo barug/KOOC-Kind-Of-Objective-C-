@@ -1,8 +1,8 @@
 void main()
 {
-int a;
-a = 1;
-@!(int)[A f :"toto toto" :"tutu"];
+@!(int)[A f :"toto toto" :"tutu" :2];
+
+@!(int)[A b :@!(void)[A c :2]];
 
 printf("toto toto", @!(int)[A f :2]);
 }
