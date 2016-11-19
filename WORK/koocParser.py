@@ -127,7 +127,6 @@ def prints(self):
 def add_module_declaration(self, module_name, st, current_block):
     decl = koocClasses.ModuleDeclaration(self.value(module_name), st)
     current_block.ref.body.append(decl)
-    imported_module.append(self.value(module_name))
     return True
 
 @meta.hook(KoocParser)
@@ -153,7 +152,6 @@ def add_class_declaration_prt(self, class_name, st, current_block, parent_class)
     decl = koocClasses.ClassDeclaration(self.value(class_name), st, self.value(parent_class))
     current_block.ref.body.append(decl)
     current_block.ref.types[self.value(class_name)] = ref(decl)
-    imported_module.append(self.value(class_name))
     return True
 
 @meta.hook(KoocParser)
@@ -161,7 +159,6 @@ def add_class_declaration(self, class_name, st, current_block):
     decl = koocClasses.ClassDeclaration(self.value(class_name), st, None)
     current_block.ref.body.append(decl)
     current_block.ref.types[self.value(class_name)] = ref(decl)
-    imported_module.append(self.value(class_name))
     return True
 
 @meta.hook(KoocParser)
