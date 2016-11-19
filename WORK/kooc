@@ -5,13 +5,13 @@ from cnorm.passes import to_c
 from cnorm.parsing.declaration import Declaration
 from sys import exit, argv as av
 import koocParser
-from koocParser import *
-# from koocTranslator import *
+from koocParser import KoocParser
+from koocTranslator import KoocTranslator
 
 def     main():
     if (len(av) < 2):
         exit(0)
-    parser = koocParser()
+    parser = KoocParser()
     ast = parser.parse_file(av[1])
     # translator = KoocTranslator()
     # print(ast.to_yml())

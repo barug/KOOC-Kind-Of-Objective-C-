@@ -1,4 +1,4 @@
-@import "test_import_implementation_module_classe.kh"
+@import "unit_test/test_import_implementation_module_classe.kh"
 
 typedef int  cest;
 typedef char  un;
