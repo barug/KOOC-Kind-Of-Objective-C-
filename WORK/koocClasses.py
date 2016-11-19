@@ -55,7 +55,7 @@ class FunctionCall(KoocStatement) :
         self.type = type
         self.Kclass = Kclass
         self.func = func
-        self.argv = []
+        self.params = []
         print (var)
         var = var.split(':')
         for arg in var :
@@ -63,4 +63,4 @@ class FunctionCall(KoocStatement) :
                 print ('[' + arg + ']')
             # pars = arg.split(')')
             # pars[0] = pars[0][1:]
-                self.argv.append(arg)
+                self.params.append(arg)

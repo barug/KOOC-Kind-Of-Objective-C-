@@ -185,6 +185,7 @@ def kooc_var(self, current_block, type, Kclass, attr):
 
 @meta.hook(KoocParser)
 def kooc_func(self, current_block, type, Kclass, func, var):
+    print (self.value(var))
     decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func), self.value(var))
     current_block.set(decl)
     # current_block.ref.body.append(decl)
