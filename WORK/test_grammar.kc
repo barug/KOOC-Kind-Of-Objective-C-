@@ -1,0 +1,8 @@
+void main()
+{
+a = @!(int)[A.toto];
+@!(int)[A func];
+@!(int)[A func :2];
+@!(int)[A func :"ery zery" :zery ];
+return a * @!(int)[A.turlu];
+}
