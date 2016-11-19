@@ -18,7 +18,7 @@ class koocParser(Grammar, Declaration):
            Declaration.declaration
            | kooc_declaration
        ]
- 
+
        primary_expression =
        [
            Declaration.primary_expression:>_
@@ -26,7 +26,7 @@ class koocParser(Grammar, Declaration):
        ]
                                //////////////\\\\\\\\\\\\\\
            kooc_expression =  /// replace id by type name \\
-           [                 ////////////////\\\\\\\\\\\\\\\\ 
+           [                 ////////////////\\\\\\\\\\\\\\\\
               ["@!("Base.id:KoocType')'] [
                                              '[' id:Kclass'.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
                                          |   '[' id:Kclass id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var)
@@ -53,11 +53,10 @@ class koocParser(Grammar, Declaration):
                    "@implementation " id:module_name Statement.compound_statement:st
                    #add_module_implementation(module_name, st, current_block)
                ]
-                                //////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
-               module_import = //error with import like @import "directory/include.h"\\
-                              ////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+               module_import =
                [
-                   "@import " '\"' id:module_name '.' "kh" '\"'
+                   "@import " '\"' [ id | '/' | ".." | "./" ]+:module_name ".kh" '\"'
                    #add_module_import(module_name, current_block)
                ]
 

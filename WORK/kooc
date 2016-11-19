@@ -21,9 +21,9 @@ def     main():
     # print("OK")
     # # parser.inject_begin(ast)
     # c_file = (av[1][:-2] + 'c')
-    c_file = open(av[2], 'w')
-    c_file.write(str(ast.to_c()))
-    c_file.close()
+    # c_file = open(av[2], 'w')
+    # c_file.write(str(ast.to_c()))
+    # c_file.close()
     # print("OK")
     # print(str(ast.to_c()))
 
