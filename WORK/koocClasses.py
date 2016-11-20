@@ -66,19 +66,19 @@ class ClassVirtual(KoocDeclaration):
         pass
 
 class VariableCall(KoocStatement) :
-    def __init__(self, type, Kclass, attr):
+    def __init__(self, type, Kclass, name):
         self.type = type
         self.Kclass = Kclass
-        self.attr = attr
+        self.attr = name
 
     def translate(self):
         pass
 
 class FunctionCall(KoocStatement) :
-    def __init__(self, type, Kclass, func, var):
+    def __init__(self, type, Kclass, name, var):
         self.type = type
         self.Kclass = Kclass
-        self.func = func
+        self.name = func
         self.argv = []
         var = var.split()
         for arg in var :

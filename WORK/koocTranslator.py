@@ -73,22 +73,6 @@ class KoocTranslator:
                                implementation)
             self.newRootBody.append(implementation)
             
-            
-
-    # def translateImplementation(self, implementationModule):
-    #     self.moduleTable.addModule(moduleNode._name)        
-    #     for declaration in moduleNode.compoundDeclaration.body:
-    #         unMangledName = declaration._name
-    #         self.mangle_symbol(moduleNode._name,
-    #                            declaration)
-    #         if (isinstance(declaration._ctype, PrimaryType)):
-    #             declaration._ctype._storage = Storages.EXTERN
-    #         self.moduleTable.addSymbol(moduleNode._name,
-    #                                    unMangledName,
-    #                                    declaration,
-    #                                    KoocModuleTable.MEMBER)
-    #         self.newRootBody.append(declaration)
-            
     def translateClass(self, classNode):
         self.moduleTable.addModule(classNode._name)
         structName = "_" + classNode._name + "_instance_struct_"
@@ -161,11 +145,44 @@ class KoocTranslator:
                                    KoocModuleTable.NON_MEMBER)
         self.newRootBody.append(allocNode)
         
-    def translateKoocExpression(self, expressionNode):
-        pass
+    def translateKoocExpression(self, exprNode):
+        print ("entering translate:")
+        symbolList = self.moduleTable.getSymbolList(exprNode.Kclass,
+                                                    exprNode.name,
+                                                    KoocModuleTable.NON_MEMBER)
+        if (isinstance(exprNode, VariableCall)):
+            print("symbolList: " + str(symbolList))
+            for symbol in symbolList:
+                if (symbol._ctype._identifier == exprNode.type):
+                    print("symbol :" + str(symbol))
+                    exprNode = nodes.Id(symbol._name)
+        # if (isinstance(exprNode, FunctionCall)):
+        #     for symbol in symbolList:
+        #         if (type(symbol._ctype) is FuncType):
+                    
+        print (str(exprNode))
+        return exprNode
 
-    def searchKoocExpression(self, scope):
-        pass
+    def searchKoocExpression(self, node):
+        # print(str(node))
+        if (hasattr(node, "__dict__")):
+            for attrName, attrValue in node.__dict__.items():
+                # print(str(attrValue))
+                setattr(node, attrName, self.searchKoocExpression(attrValue))
+        if (type(node) == list):
+            for attr in node:
+                self.searchKoocExpression(attr)
+        if isinstance(node, KoocStatement):
+            node = self.translateKoocExpression(node)
+        return node
+        
+        # if hasattr(node, "body"):
+        #     for childNode in body.body:
+        #         self.searchKoocExpression(childNode)
+        # if hasattr(node, "params"):
+        #     if (isinstance(node, KoocStatement)):
+        #         translateKoocExpression
+
 
     def translateKoocAst(self, rootNode):
         for node in rootNode.body:
@@ -176,6 +193,7 @@ class KoocTranslator:
             elif isinstance(node, ModuleImplementation):
                 self.translateImplementation(node)
             else:
+                node = self.searchKoocExpression(node)
                 self.newRootBody.append(node)
         rootNode.body = self.newRootBody
         print(self.moduleTable)

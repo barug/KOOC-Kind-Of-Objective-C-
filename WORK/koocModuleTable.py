@@ -31,22 +31,32 @@ class KoocModuleTable:
 
     def getAllSymbolLists(self, moduleName, Stype):
         if Stype == KoocModuleTable.NON_MEMBER:
-            return self.nonMemberTables[moduleName]
-        if Stype == KoocModuleTable.MEMBER:
-            return self.membersTables[moduleName]
-        if Stype == KoocModuleTable.VIRTUAL:
-            return self.virtualsTables[moduleName]
+            table = self.nonMemberTables
+        elif Stype == KoocModuleTable.MEMBER:
+            table = self.membersTables
+        elif Stype == KoocModuleTable.VIRTUAL:
+            table = self.virtualsTables
+        if moduleName in table:
+            return table[moduleName]
+        else:
+            return False
         
         
     def getSymbolList(self, moduleName, unMangledName, Stype):
         if Stype == KoocModuleTable.NON_MEMBER:
-            return self.nonMemberTables[moduleName][unMangledName]
-        if Stype == KoocModuleTable.MEMBER:
-            return self.membersTables[moduleName][unMangledName]
-        if Stype == KoocModuleTable.VIRTUAL:
-            return self.virtualsTables[moduleName][unMangledName]
-
-            
+            table = self.nonMemberTables
+        elif Stype == KoocModuleTable.MEMBER:
+            table = self.membersTables
+        elif Stype == KoocModuleTable.VIRTUAL:
+            table = self.virtualsTables
+        if moduleName in table:
+            if unMangledName in table[moduleName]:
+                return table[moduleName][unMangledName]
+            else:
+                return False
+        else:
+            return False
+                    
     # def __str__(self):
     #     stringRep = ""
     #     for moduleName, symbolDict in self.nonMembersTable.items():
