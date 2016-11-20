@@ -26,12 +26,24 @@ class KoocParser(Grammar, Declaration):
            Declaration.primary_expression:>_
            | kooc_expression:>_
        ]
-                               //////////////\\\\\\\\\\\\\\
+
            kooc_expression =  /// replace id by type name \\
-           [                 ////////////////\\\\\\\\\\\\\\\\
-              ["@!("Base.id:KoocType')'] '[' id:Kclass #check_class(_, Kclass)
-                                    [ '.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
-                                    | id:func [ ':'expression ]*:var  ']' #kooc_func(_, KoocType, Kclass, func, var) ]
+           [
+              [ "@!("Base.id:KoocType')'] '['
+                                              id:Kclass #check_class(_, Kclass)
+                                              [
+                                                 [
+                                                    '.'assignement_expression:attribut #kooc_var(_, KoocType, Kclass, attribut)
+                                                 ]
+                                                    |
+                                                 [
+                                                    id:func #kooc_func(_, KoocType, Kclass, func)
+                                                    [
+                                                      ':'[ kooc_expression | assignement_expression ]:param #add_param(_, param)
+                                                    ]*
+                                                 ]
+                                               ]
+                                           ']'
            ]
 
            kooc_declaration =
@@ -113,8 +125,8 @@ class KoocParser(Grammar, Declaration):
 """
 
 @meta.hook(KoocParser)
-def prints(self):
-    print("OK")
+def add_param(self, node, param):
+    node.params.append(param)
     return True
 
 @meta.hook(KoocParser)
@@ -127,16 +139,18 @@ def add_module_declaration(self, module_name, st, current_block):
 def add_module_implementation(self, module_name, st, current_block):
     decl = koocClasses.ModuleImplementation(self.value(module_name), st)
     current_block.ref.body.append(decl)
-    imported_module.append("OK")
     return True
 
 @meta.hook(KoocParser)
 def add_module_import(self, module_name, current_block):
+    if (self.value(module_name) in imported_module):
+        return True
     ast = KoocParser().parse_file(self.value(module_name) + ".kh")
     decl = koocClasses.ModuleImport(self.value(module_name), ast)
     current_block.ref.body.append(decl)
     for types, ref in ast.types.items():
         current_block.ref.types[types] = ref
+        imported_module.append(self.value(module_name))
     return True
 
 @meta.hook(KoocParser)
@@ -161,6 +175,7 @@ def add_member_declaration(self, class_name, st, current_block):
 
 @meta.hook(KoocParser)
 def add_virtual_declaration(self, class_name, st, current_block):
+    print("this is a virtual fonction")
     decl = koocClasses.ClassVirtual(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
@@ -173,8 +188,8 @@ def kooc_var(self, current_block, type, Kclass, attr):
     return True
 
 @meta.hook(KoocParser)
-def kooc_func(self, current_block, type, Kclass, func, var):
-    decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func), self.value(var))
+def kooc_func(self, current_block, type, Kclass, func):
+    decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func))
     current_block.set(decl)
     # current_block.ref.body.append(decl)
     return True
