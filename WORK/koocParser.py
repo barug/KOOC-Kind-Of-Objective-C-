@@ -169,6 +169,7 @@ def add_member_declaration(self, class_name, st, current_block):
 
 @meta.hook(KoocParser)
 def add_virtual_declaration(self, class_name, st, current_block):
+    print("this is a virtual fonction")
     decl = koocClasses.ClassVirtual(self.value(class_name), st)
     current_block.ref.body.append(decl)
     return True
