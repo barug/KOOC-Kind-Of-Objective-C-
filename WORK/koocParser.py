@@ -33,7 +33,7 @@ class KoocParser(Grammar, Declaration):
                                               id:Kclass #check_class(_, Kclass)
                                               [
                                                  [
-                                                    '.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
+                                                    '.'assignement_expression:attribut #kooc_var(_, KoocType, Kclass, attribut)
                                                  ]
                                                     |
                                                  [
