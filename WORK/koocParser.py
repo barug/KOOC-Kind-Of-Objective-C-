@@ -29,16 +29,22 @@ class KoocParser(Grammar, Declaration):
 
            kooc_expression =  /// replace id by type name \\
            [
-              [ "@!("Base.id:KoocType')'] '[' id:Kclass #check_class(_, Kclass)
-                                    [ '.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
-                                    | id:func [ ':' [ arg_list?:var ]  ']' #kooc_func(_, KoocType, Kclass, func, var) ] ]
+              [ "@!("Base.id:KoocType')'] '['
+                                              id:Kclass #check_class(_, Kclass)
+                                              [
+                                                 [
+                                                    '.'id:attribut ']' #kooc_var(_, KoocType, Kclass, attribut)
+                                                 ]
+                                                    |
+                                                 [
+                                                    id:func #kooc_func(_, KoocType, Kclass, func)
+                                                    [
+                                                      ':'[ kooc_expression | assignement_expression ]:param #add_param(_, param)
+                                                    ]*
+                                                 ]
+                                               ]
+                                           ']'
            ]
-
-           arg_list = [
-           assignement_expression:a #new_arg(_, a)
-           [   ':'
-               assignement_expression:a #new_arg(_, a)
-           ]* ]
 
            kooc_declaration =
            [
@@ -119,8 +125,8 @@ class KoocParser(Grammar, Declaration):
 """
 
 @meta.hook(KoocParser)
-def prints(self):
-    print("OK")
+def add_param(self, node, param):
+    node.params.append(param)
     return True
 
 @meta.hook(KoocParser)
@@ -182,9 +188,8 @@ def kooc_var(self, current_block, type, Kclass, attr):
     return True
 
 @meta.hook(KoocParser)
-def kooc_func(self, current_block, type, Kclass, func, var):
-    print (self.value(var))
-    decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func), self.value(var))
+def kooc_func(self, current_block, type, Kclass, func):
+    decl = koocClasses.FunctionCall(self.value(type), self.value(Kclass), self.value(func))
     current_block.set(decl)
     # current_block.ref.body.append(decl)
     return True

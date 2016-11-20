@@ -51,16 +51,8 @@ class VariableCall(KoocStatement) :
         self.attr = attr
 
 class FunctionCall(KoocStatement) :
-    def __init__(self, type, Kclass, func, var):
+    def __init__(self, type, Kclass, func):
         self.type = type
         self.Kclass = Kclass
         self.func = func
         self.params = []
-        print (var)
-        var = var.split(':')
-        for arg in var :
-            if (arg != '') :
-                print ('[' + arg + ']')
-            # pars = arg.split(')')
-            # pars[0] = pars[0][1:]
-                self.params.append(arg)
