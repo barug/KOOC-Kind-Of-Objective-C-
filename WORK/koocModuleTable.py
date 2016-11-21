@@ -8,6 +8,7 @@ class KoocModuleTable:
         self.nonMemberTables = {}
         self.membersTables = {}
         self.virtualsTables = {}
+        self.instancesStructs = {}
         
     def addModule(self, moduleName):
         self.nonMemberTables[moduleName] = {}
@@ -39,7 +40,7 @@ class KoocModuleTable:
         if moduleName in table:
             return table[moduleName]
         else:
-            return False
+            return None
         
         
     def getSymbolList(self, moduleName, unMangledName, Stype):
@@ -53,9 +54,9 @@ class KoocModuleTable:
             if unMangledName in table[moduleName]:
                 return table[moduleName][unMangledName]
             else:
-                return False
+                return None
         else:
-            return False
+            return None
                     
     # def __str__(self):
     #     stringRep = ""

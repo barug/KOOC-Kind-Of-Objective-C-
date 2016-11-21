@@ -7,7 +7,7 @@
 }
 
 @class testClass : baseClass {
-       int classVariable;
+       int classVariable = 10;
 
        @member {
        int memberVariable;

@@ -150,16 +150,20 @@ class KoocTranslator:
         symbolList = self.moduleTable.getSymbolList(exprNode.Kclass,
                                                     exprNode.name,
                                                     KoocModuleTable.NON_MEMBER)
-        if (isinstance(exprNode, VariableCall)):
-            print("symbolList: " + str(symbolList))
-            for symbol in symbolList:
-                if (symbol._ctype._identifier == exprNode.type):
-                    print("symbol :" + str(symbol))
-                    exprNode = nodes.Id(symbol._name)
-        # if (isinstance(exprNode, FunctionCall)):
-        #     for symbol in symbolList:
-        #         if (type(symbol._ctype) is FuncType):
-                    
+        if symbolList is not None:
+            if (isinstance(exprNode, VariableCall)):
+                print("symbolList: " + str(symbolList))
+                for symbol in symbolList:
+                    if (symbol._ctype._identifier == exprNode.type):
+                        print("symbol :" + str(symbol))
+                        exprNode = nodes.Id(symbol._name)
+            if (isinstance(exprNode, FunctionCall)):
+                for symbol in symbolList:
+                    if ((type(symbol._ctype) is FuncType)
+                        and (len(exprNode.params) == len(symbol._ctype._params))):
+                        print ("found function: " + str(symbol))
+                        for i in range(0, len(exprNode.params)):
+                            pass
         print (str(exprNode))
         return exprNode
 

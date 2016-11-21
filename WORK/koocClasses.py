@@ -48,7 +48,7 @@ class VariableCall(KoocStatement) :
     def __init__(self, type, Kclass, name):
         self.type = type
         self.Kclass = Kclass
-        self.attr = name
+        self.name = name
 
 class FunctionCall(KoocStatement) :
     def __init__(self, type, Kclass, name):

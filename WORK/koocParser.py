@@ -27,19 +27,19 @@ class KoocParser(Grammar, Declaration):
            | kooc_expression:>_
        ]
 
-           kooc_expression =  /// replace id by type name \\
+           kooc_expression = /// replace id by type name \\
            [
               [ "@!("Base.id:KoocType')'] '['
                                               id:Kclass #check_class(_, Kclass)
                                               [
                                                  [
-                                                    '.'assignement_expression:attribut #kooc_var(_, KoocType, Kclass, attribut)
+                                                    '.'Base.id:attribut #kooc_var(_, KoocType, Kclass, attribut)
                                                  ]
                                                     |
                                                  [
                                                     id:func #kooc_func(_, KoocType, Kclass, func)
                                                     [
-                                                      ':'[ kooc_expression | assignement_expression ]:param #add_param(_, param)
+                                                      ':'[ kooc_expression | assignement_expression]:param #add_kooc_param(_, param)
                                                     ]*
                                                  ]
                                                ]
@@ -125,8 +125,9 @@ class KoocParser(Grammar, Declaration):
 """
 
 @meta.hook(KoocParser)
-def add_param(self, node, param):
-    node.params.append(param)
+def add_kooc_param(self, node, param):
+    if (isinstance(node, koocClasses.FunctionCall)):
+        node.params.append(param)
     return True
 
 @meta.hook(KoocParser)
