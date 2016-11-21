@@ -38,7 +38,6 @@ class KoocTranslator:
             for param in declarationNode._ctype.params:
                 mangledName = self.add_mangled_type(param._ctype,
                                                     mangledName)
-        # print(mangledName)
         declarationNode._name = mangledName
 
     def translateModule(self, moduleNode):
@@ -116,8 +115,11 @@ class KoocTranslator:
                 unMangledName = declaration._name
                 self.mangle_symbol(classNode._name,
                                    declaration)
-                if (isinstance(declaration, nodes.PrimaryType)):
+                if (type(declaration._ctype) is PrimaryType):
                     declaration._storage = Storages.EXTERN
+                    if (hasattr(declaration, "_assign_expr")):
+                        declaration._koocVarVal = declaration._assign_expr
+                        delattr(declaration, "_assign_expr")
                 self.moduleTable.addSymbol(classNode._name,
                                            unMangledName,
                                            declaration,
@@ -141,10 +143,30 @@ class KoocTranslator:
         print(allocNode.to_yml())
         self.moduleTable.addSymbol(classNode._name,
                                    "alloc",
-                                   allocName,
+                                   allocNode,
                                    KoocModuleTable.NON_MEMBER)
         self.newRootBody.append(allocNode)
-        
+
+    def getFunctionSymbol(self, exprNode, symbol):
+        params = []
+        if ((type(symbol._ctype) is FuncType)
+            and (len(exprNode.params) == len(symbol._ctype._params))):
+            print ("found function: " + str(symbol))
+            for i in range(0, len(exprNode.params)):
+                if (type(exprNode.params[i]) is Cast):
+                    print(str(exprNode.params[i]))
+                    print(str(symbol._ctype._params[0]))
+                    if (exprNode.params[i].params[0]._identifier
+                    != symbol._ctype._params[i]._ctype._identifier):
+                        return None
+                    else:
+                        params.append(exprNode.params[i].params[1])
+        else:
+            return None
+        funcNode = nodes.Func(nodes.Id(symbol._name), params)
+        print("found right function")
+        return funcNode
+                        
     def translateKoocExpression(self, exprNode):
         print ("entering translate:")
         symbolList = self.moduleTable.getSymbolList(exprNode.Kclass,
@@ -159,11 +181,11 @@ class KoocTranslator:
                         exprNode = nodes.Id(symbol._name)
             if (isinstance(exprNode, FunctionCall)):
                 for symbol in symbolList:
-                    if ((type(symbol._ctype) is FuncType)
-                        and (len(exprNode.params) == len(symbol._ctype._params))):
-                        print ("found function: " + str(symbol))
-                        for i in range(0, len(exprNode.params)):
-                            pass
+                    funcNode = self.getFunctionSymbol(exprNode, symbol)
+                    if funcNode is not None:
+                        print("found corresponding function")
+                        exprNode = funcNode 
+                        
         print (str(exprNode))
         return exprNode
 
@@ -174,20 +196,12 @@ class KoocTranslator:
                 # print(str(attrValue))
                 setattr(node, attrName, self.searchKoocExpression(attrValue))
         if (type(node) == list):
-            for attr in node:
-                self.searchKoocExpression(attr)
+            for i in range(0, len(node)):
+                node[i] = self.searchKoocExpression(node[i])
         if isinstance(node, KoocStatement):
             node = self.translateKoocExpression(node)
         return node
         
-        # if hasattr(node, "body"):
-        #     for childNode in body.body:
-        #         self.searchKoocExpression(childNode)
-        # if hasattr(node, "params"):
-        #     if (isinstance(node, KoocStatement)):
-        #         translateKoocExpression
-
-
     def translateKoocAst(self, rootNode):
         for node in rootNode.body:
             if isinstance(node, ModuleDeclaration):

@@ -1,0 +1,36 @@
+
+#include <stdio.h>
+
+@module A {
+	int a = 10;
+	int f(char c, int b);
+}
+
+@module B {
+	int a = 27;
+}
+
+
+@implementation A {
+	int f(char c, int b)
+	{
+		printf("result is c:%c b:%i\n", c, b);
+	}
+}
+
+@implementation B {
+
+}
+
+int main()
+{
+	@!(int)[A f :(char)'c' :(int)@!(int)[A.a]];
+	@!(int)[A f :(char)'c' :(int)@!(int)[B.a]];
+}
+
+//int a = @!(int)[A f :(char)'c' :(int)@!(int)[A.a]];
+//int b = @!(int)[A.a];
+//int b = 10 * @!(int)[A a];
+//int b = 25 * f(10, @!(int)[A a], 817 - @!(int)[B b]);
+//a = @!(int)[B.b];
+// e(10, @!(int)[B.b]);
