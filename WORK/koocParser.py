@@ -25,26 +25,24 @@ class KoocParser(Grammar, Declaration):
        [
            Declaration.primary_expression:>_
            | kooc_expression:>_
+
        ]
+
+       single_statement =
+       [
+            Statement.single_statement
+            | kooc_declaration
+        ]
 
            kooc_expression = /// replace id by type name \\
            [
-              [ "@!("Base.id:KoocType')'] '['
-                                              [ assignement_expression
-                                                | Base.id]:Kclass
-                                              [
-                                                 [
-                                                    '.'Base.id:attribut #kooc_var(_, KoocType, Kclass, attribut)
-                                                 ]
-                                                    |
-                                                 [
-                                                    id:func #kooc_func(_, KoocType, Kclass, func)
-                                                    [
-                                                      ':'[ kooc_expression | assignement_expression]:param #add_kooc_param(_, param)
-                                                    ]*
-                                                 ]
-                                               ]
-                                           ']'
+              [ "@!("Base.id:KoocType')'] '[' id:Kclass #check_class(_, Kclass)
+                  [
+                     [ '.'Base.id:attribut #kooc_var(_, KoocType, Kclass, attribut) ]
+                     |
+                     [ id:func #kooc_func(_, KoocType, Kclass, func)
+                        [ ':'[ kooc_expression | assignement_expression]:param #add_kooc_param(_, param) ]* ]
+                        ]  ']'
            ]
 
            kooc_declaration =
@@ -53,6 +51,8 @@ class KoocParser(Grammar, Declaration):
                | module_implementation
                | module_import
                | class_declaration
+               | class_member
+               | class_virtual
            ]
 
                module_declaration =
@@ -100,8 +100,9 @@ class KoocParser(Grammar, Declaration):
 
                           class_member_statement =
                           [
-                               Statement.compound_statement:>_
-                               | [
+                               Statement.compound_statement
+                               |
+                                 [
                                    __scope__:current_block
                                    #new_blockstmt(_, current_block) line_of_code
                                  ]
@@ -114,14 +115,13 @@ class KoocParser(Grammar, Declaration):
                       ]
                           class_virtual_statement =
                           [
-                               Statement.compound_statement:>_
-                               | [
+                               Statement.compound_statement
+                               |
+                                [
                                    __scope__:current_block
                                    #new_blockstmt(_, current_block) line_of_code
                                  ]
                           ]
-
-
 """
 
     # old @implementation rule
