@@ -1,0 +1,31 @@
+#include <stdio.h>
+@import "class.kh"
+
+@implementation baseClass {
+       @member {
+       int baseClassFunction()
+       {
+
+       }
+       }      
+}
+
+@implementation testClass {
+       @member {
+       	       void memberFunction(int arg1, char arg2)
+       	       {
+			printf("member: %i", @!(int)[self.memberVariable]);
+       		}
+		void setMemberVariable(int val)
+		{
+			@!(int)[self.memberVariable] = val;
+		}
+       }      
+}
+
+int main()
+{
+	testClass ob;
+	@!(void)[ob setMemberVariable :(int)13];
+	@!(void)[ob memberFunction :(int) 0 :(char) 'c'];
+}

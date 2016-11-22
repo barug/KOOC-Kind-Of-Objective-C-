@@ -25,7 +25,7 @@ class ModuleImplementation(KoocDeclaration):
 
 class ModuleImport(KoocStatement):
     def __init__(self, moduleName, ast):
-        self.moduleName = "@import \"" + moduleName + ".kh\"\n"
+        self.moduleName = moduleName
         self.ast = ast
 
 class ClassDeclaration(KoocDeclaration):

@@ -1,4 +1,6 @@
 @class A {
 	int a = 10;
-	int f(char c, int b);
+	@member {
+	  	int f(char c, int b);
+	}
 }

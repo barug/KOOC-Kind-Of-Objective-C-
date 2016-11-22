@@ -30,6 +30,15 @@ class KoocModuleTable:
             table[unMangledName] = []
         table[unMangledName].append(mangledSymbolNode)
 
+    def addInstanceStruct(self, className, structName):
+        self.instancesStructs[className] = structName
+
+    def getInstanceStruct(self, className):
+        if className in self.instancesStructs:
+            return self.instancesStructs[className]
+        else:
+            return None
+    
     def getAllSymbolLists(self, moduleName, Stype):
         if Stype == KoocModuleTable.NON_MEMBER:
             table = self.nonMemberTables

@@ -1,9 +1,12 @@
 
-#include <stdio.h>
+//@import "expr.kh"
 
-@module A {
+@class A {
 	int a = 10;
-	int f(char c, int b);
+	@member {
+	  	int f(char c, int b);
+	}
+	char e();
 }
 
 @module B {
@@ -12,9 +15,15 @@
 
 
 @implementation A {
-	int f(char c, int b)
+	@member {
+		int f(char c, int b)
+		{
+			printf("result is c:%c b:%i\n", c, b);
+		}
+	}
+	char e()
 	{
-		printf("result is c:%c b:%i\n", c, b);
+
 	}
 }
 
@@ -24,8 +33,8 @@
 
 int main()
 {
-	@!(int)[A f :(char)'c' :(int)@!(int)[A.a]];
-	@!(int)[A f :(char)'c' :(int)@!(int)[B.a]];
+	//@!(int)[A f :(char)'c' :(int)@!(int)[A.a]];
+	//@!(int)[A f :(char)'c' :(int)@!(int)[B.a]];
 }
 
 //int a = @!(int)[A f :(char)'c' :(int)@!(int)[A.a]];

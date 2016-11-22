@@ -7,6 +7,7 @@ from cnorm.parsing.declaration import Declaration
 from cnorm.nodes import *
 from koocClasses import *
 from koocModuleTable import KoocModuleTable
+from collections import ChainMap
 
 class KoocTranslator:
 
@@ -60,7 +61,13 @@ class KoocTranslator:
     def translateImplementation(self, implementationNode):
         nonMembers = self.moduleTable.getAllSymbolLists(implementationNode._name,
                                                         KoocModuleTable.NON_MEMBER)
-        for memberName, symbolList in nonMembers.items():
+        structName = self.moduleTable.getInstanceStruct(implementationNode._name)
+        if (structName is not None):
+            selfNode = nodes.Decl('self', nodes.PrimaryType(structName))
+            selfNode._ctype._decltype = nodes.PointerType()
+            selfNode._ctype._storage = Storages.AUTO
+            selfNode._ctype._specifier = Specifiers.AUTO
+        for nonMemberName, symbolList in nonMembers.items():
             for symbol in symbolList:
                 if (type(symbol._ctype) is PrimaryType):
                     variableImpl = copy.deepcopy(symbol)
@@ -68,13 +75,24 @@ class KoocTranslator:
                     variableImpl._ctype._storage = Storages.AUTO
                     self.newRootBody.append(variableImpl)
         for implementation in implementationNode.compoundDeclaration.body:
-            self.mangle_symbol(implementationNode._name,
-                               implementation)
-            self.newRootBody.append(implementation)
+            if type(implementation) is ClassMember:
+                for member in implementation.compoundDeclaration.body:
+                    if isinstance(member._ctype, FuncType):
+                        self.mangle_symbol(implementationNode._name,
+                                           member)
+                        member._ctype.params.insert(0, selfNode)
+                        member._className = implementationNode._name
+                        self.searchKoocExpression(member, ChainMap())
+                        self.newRootBody.append(member)
+            else:
+                self.mangle_symbol(implementationNode._name,
+                                   implementation)
+                self.newRootBody.append(implementation)
             
     def translateClass(self, classNode):
         self.moduleTable.addModule(classNode._name)
         structName = "_" + classNode._name + "_instance_struct_"
+        self.moduleTable.addInstanceStruct(classNode._name, structName)
         instanceStructNode = nodes.Decl(structName)
         self.newRootBody.append(instanceStructNode)
         ctype = nodes.ComposedType(structName)
@@ -107,8 +125,9 @@ class KoocTranslator:
                                                member,
                                                KoocModuleTable.MEMBER)
                     if isinstance(member._ctype, FuncType):
-                        member._ctype.params.insert(0, selfNode)
-                        self.newRootBody.append(member)
+                        bodyNode = copy.deepcopy(member)
+                        bodyNode._ctype.params.insert(0, selfNode)
+                        self.newRootBody.append(bodyNode)
                     else:
                         ctype.fields.append(member)
             else:
@@ -139,8 +158,6 @@ class KoocTranslator:
         allocBody.append(instanceDeclNode)
         allocBody.append(nodes.Return(nodes.Id("newInstance")))
         allocNode.body = nodes.BlockStmt(allocBody)
-        print(instanceDeclNode.to_yml())
-        print(allocNode.to_yml())
         self.moduleTable.addSymbol(classNode._name,
                                    "alloc",
                                    allocNode,
@@ -166,9 +183,43 @@ class KoocTranslator:
         funcNode = nodes.Func(nodes.Id(symbol._name), params)
         print("found right function")
         return funcNode
-                        
-    def translateKoocExpression(self, exprNode):
+
+    def translateSelfExpression(self, exprNode):
+        print ("enter self expression: " + str(exprNode))
+        if (isinstance(exprNode, VariableCall)):
+            return nodes.Arrow(nodes.Id("self"), [nodes.Id(exprNode.name)])
+        return None
+
+    def translateMemberCall(self, exprNode, className):
+        print("entering member call")
+        print(className)
+        print(exprNode.Kclass)
+        symbolList = self.moduleTable.getSymbolList(className,
+                                                    exprNode.name,
+                                                    KoocModuleTable.MEMBER)
+        print(str(exprNode))
+        if symbolList is not None:
+            print ("found symbol")
+            for symbol in symbolList:
+                print (str(symbol))
+                funcNode = self.getFunctionSymbol(exprNode, symbol)
+                if funcNode is not None:
+                    funcNode.params.insert(0, nodes.Id(exprNode.Kclass))
+                    exprNode = funcNode
+                    return exprNode
+        return None
+                    
+                
+        
+    
+    def translateKoocExpression(self, exprNode, scopeMaps):
         print ("entering translate:")
+        if (exprNode.Kclass == "self"):
+            return self.translateSelfExpression(exprNode)
+        if ((not self.moduleTable.hasModule(exprNode.Kclass))
+        and (exprNode.Kclass in scopeMaps)):
+            return self.translateMemberCall(exprNode,
+                                            scopeMaps[exprNode.Kclass])
         symbolList = self.moduleTable.getSymbolList(exprNode.Kclass,
                                                     exprNode.name,
                                                     KoocModuleTable.NON_MEMBER)
@@ -189,19 +240,34 @@ class KoocTranslator:
         print (str(exprNode))
         return exprNode
 
-    def searchKoocExpression(self, node):
+    def searchKoocExpression(self, node, scopeMaps):
         # print(str(node))
+        if (type(node) is BlockStmt):
+            scopeMaps = scopeMaps.new_child()
+        if ((type(node) is Decl)
+        and(type(node._ctype) is PrimaryType)):
+            if self.moduleTable.hasModule(node._ctype._identifier):
+                scopeMaps[node._name] = node._ctype._identifier
+                print(str(scopeMaps))
+                node._ctype._identifier = self.moduleTable.getInstanceStruct(node._ctype._identifier)
         if (hasattr(node, "__dict__")):
             for attrName, attrValue in node.__dict__.items():
                 # print(str(attrValue))
-                setattr(node, attrName, self.searchKoocExpression(attrValue))
+                setattr(node, attrName, self.searchKoocExpression(attrValue, scopeMaps))
         if (type(node) == list):
             for i in range(0, len(node)):
-                node[i] = self.searchKoocExpression(node[i])
+                node[i] = self.searchKoocExpression(node[i], scopeMaps)
         if isinstance(node, KoocStatement):
-            node = self.translateKoocExpression(node)
+            node = self.translateKoocExpression(node, scopeMaps)
         return node
-        
+
+    def translateImport(self, importNode):
+        newRootSave = self.newRootBody
+        self.newRootBody = []
+        self.translateKoocAst(importNode.ast)
+        self.newRootBody = newRootSave
+        self.newRootBody.append(nodes.Raw('#include "' + importNode.moduleName + '.h"\n'))
+    
     def translateKoocAst(self, rootNode):
         for node in rootNode.body:
             if isinstance(node, ModuleDeclaration):
@@ -210,8 +276,10 @@ class KoocTranslator:
                 self.translateClass(node)
             elif isinstance(node, ModuleImplementation):
                 self.translateImplementation(node)
+            elif isinstance(node, ModuleImport):
+                self.translateImport(node)
             else:
-                node = self.searchKoocExpression(node)
+                node = self.searchKoocExpression(node, ChainMap())
                 self.newRootBody.append(node)
         rootNode.body = self.newRootBody
         print(self.moduleTable)

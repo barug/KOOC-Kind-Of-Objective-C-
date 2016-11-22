@@ -1,5 +1,5 @@
 @class baseClass {
-       void *baseClassVariable;
+       void *baseClassVariable = NULL;
        @member {
        char baseClassMember;
        int baseClassFunction();
@@ -11,6 +11,7 @@
 
        @member {
        int memberVariable;
+       void setMemberVariable(int val);
        void memberFunction(int arg1, char arg2);
        }      
 }

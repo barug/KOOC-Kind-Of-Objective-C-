@@ -30,7 +30,8 @@ class KoocParser(Grammar, Declaration):
            kooc_expression = /// replace id by type name \\
            [
               [ "@!("Base.id:KoocType')'] '['
-                                              id:Kclass #check_class(_, Kclass)
+                                              [ assignement_expression
+                                                | Base.id]:Kclass
                                               [
                                                  [
                                                     '.'Base.id:attribut #kooc_var(_, KoocType, Kclass, attribut)
@@ -63,8 +64,7 @@ class KoocParser(Grammar, Declaration):
 
                module_implementation =
                [
-                   "@implementation " id:module_name Statement.compound_statement:st
-                   #add_module_implementation(module_name, st, current_block)
+                   "@implementation " id:class_name class_statement:st #add_module_implementation(class_name, st, current_block)
                ]
 
                module_import =
@@ -124,6 +124,11 @@ class KoocParser(Grammar, Declaration):
 
 """
 
+    # old @implementation rule
+    # "@implementation " id:module_name Statement.compound_statement:st
+    # #add_module_implementation(module_name, st, current_block)
+
+    
 @meta.hook(KoocParser)
 def add_kooc_param(self, node, param):
     if (isinstance(node, koocClasses.FunctionCall)):
@@ -141,6 +146,12 @@ def add_module_implementation(self, module_name, st, current_block):
     decl = koocClasses.ModuleImplementation(self.value(module_name), st)
     current_block.ref.body.append(decl)
     return True
+
+# @meta.hook(KoocParser)
+# def add_module_implementation(self, module_name, st, current_block):
+#     decl = koocClasses.ModuleImplementation(self.value(module_name), st)
+#     current_block.ref.body.append(decl)
+#     return True
 
 @meta.hook(KoocParser)
 def add_module_import(self, module_name, current_block):
