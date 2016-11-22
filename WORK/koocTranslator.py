@@ -58,6 +58,33 @@ class KoocTranslator:
                                        KoocModuleTable.NON_MEMBER)
             self.newRootBody.append(declaration)
 
+    def translateSelfExpression(self, exprNode, className):
+        print ("enter self expression: " + str(exprNode))
+        symbolList = self.moduleTable.getSymbolList(className,
+                                                    exprNode.name,
+                                                    KoocModuleTable.MEMBER)
+        for symbol in symbolList:
+            if (symbol._ctype._identifier == exprNode.type):
+                print("symbol :" + str(symbol))
+                symbolName = nodes.Id(symbol._name)
+
+        if (isinstance(exprNode, VariableCall)):
+            return nodes.Arrow(nodes.Id("self"), [symbolName])
+        return None
+            
+    def searchSelfExpression(self, node, className):
+        if (hasattr(node, "__dict__")):
+            for attrName, attrValue in node.__dict__.items():
+                setattr(node, attrName, self.searchSelfExpression(attrValue, className))
+        if (type(node) == list):
+            for i in range(0, len(node)):
+                node[i] = self.searchSelfExpression(node[i], className)
+        if (isinstance(node, KoocStatement)
+        and node.Kclass  == "self" ):
+            node = self.translateSelfExpression(node, className)
+        return node
+
+            
     def translateImplementation(self, implementationNode):
         nonMembers = self.moduleTable.getAllSymbolLists(implementationNode._name,
                                                         KoocModuleTable.NON_MEMBER)
@@ -67,6 +94,21 @@ class KoocTranslator:
             selfNode._ctype._decltype = nodes.PointerType()
             selfNode._ctype._storage = Storages.AUTO
             selfNode._ctype._specifier = Specifiers.AUTO
+            allocName = "_" + implementationNode._name + "_alloc_";
+            allocNode = nodes.Decl(allocName, nodes.FuncType(structName))
+            allocNode._ctype._decltype = nodes.PointerType()
+            allocBody = []
+            instanceDeclNode = nodes.Decl("newInstance", nodes.PrimaryType(structName))
+            instanceDeclNode._ctype._decltype = PointerType()
+            mallocNode = nodes.Func(nodes.Id("malloc"),
+                                [nodes.Sizeof(nodes.Id("sizeof"),
+                                              [nodes.PrimaryType(structName)])])
+            instanceDeclNode._assign_expr = mallocNode
+            allocBody.append(instanceDeclNode)
+            allocBody.append(nodes.Return(nodes.Id("newInstance")))
+            allocNode.body = nodes.BlockStmt(allocBody)
+            self.newRootBody.append(allocNode)
+
         for nonMemberName, symbolList in nonMembers.items():
             for symbol in symbolList:
                 if (type(symbol._ctype) is PrimaryType):
@@ -82,6 +124,8 @@ class KoocTranslator:
                                            member)
                         member._ctype.params.insert(0, selfNode)
                         member._className = implementationNode._name
+                        self.searchSelfExpression(member,
+                                                  implementationNode._name)
                         self.searchKoocExpression(member, ChainMap())
                         self.newRootBody.append(member)
             else:
@@ -110,9 +154,12 @@ class KoocTranslator:
             and self.moduleTable.hasModule(parentName)):
             SymbolLists = self.moduleTable.getAllSymbolLists(parentName,
                                                              KoocModuleTable.MEMBER)
+            self.moduleTable.setSymbolList(classNode._name,
+                                           SymbolLists,
+                                           KoocModuleTable.MEMBER)
             for key, symbolList in SymbolLists.items():
                 for symbol in symbolList:
-                    if not isinstance(symbol._ctype, nodes.FuncType):
+                    if type(symbol._ctype) is nodes.PrimaryType:
                         ctype.fields.append(symbol)
         for declaration in classNode.compoundDeclaration.body:
             if isinstance(declaration, ClassMember):
@@ -148,16 +195,6 @@ class KoocTranslator:
         allocName = "_" + classNode._name + "_alloc_";
         allocNode = nodes.Decl(allocName, nodes.FuncType(structName))
         allocNode._ctype._decltype = nodes.PointerType()
-        allocBody = []
-        instanceDeclNode = nodes.Decl("newInstance", nodes.PrimaryType(structName))
-        instanceDeclNode._ctype._decltype = PointerType()
-        mallocNode = nodes.Func(nodes.Id("malloc"),
-                                [nodes.Sizeof(nodes.Id("sizeof"),
-                                              [nodes.PrimaryType(structName)])])
-        instanceDeclNode._assign_expr = mallocNode
-        allocBody.append(instanceDeclNode)
-        allocBody.append(nodes.Return(nodes.Id("newInstance")))
-        allocNode.body = nodes.BlockStmt(allocBody)
         self.moduleTable.addSymbol(classNode._name,
                                    "alloc",
                                    allocNode,
@@ -184,12 +221,6 @@ class KoocTranslator:
         print("found right function")
         return funcNode
 
-    def translateSelfExpression(self, exprNode):
-        print ("enter self expression: " + str(exprNode))
-        if (isinstance(exprNode, VariableCall)):
-            return nodes.Arrow(nodes.Id("self"), [nodes.Id(exprNode.name)])
-        return None
-
     def translateMemberCall(self, exprNode, className):
         print("entering member call")
         print(className)
@@ -207,15 +238,10 @@ class KoocTranslator:
                     funcNode.params.insert(0, nodes.Id(exprNode.Kclass))
                     exprNode = funcNode
                     return exprNode
-        return None
-                    
-                
-        
+        return None        
     
     def translateKoocExpression(self, exprNode, scopeMaps):
         print ("entering translate:")
-        if (exprNode.Kclass == "self"):
-            return self.translateSelfExpression(exprNode)
         if ((not self.moduleTable.hasModule(exprNode.Kclass))
         and (exprNode.Kclass in scopeMaps)):
             return self.translateMemberCall(exprNode,

@@ -17,7 +17,7 @@ def     main():
     # print(ast.to_yml())
     translator.translateKoocAst(ast)
     print(ast.to_yml())
-    print(str(ast.to_c()))
+    # print(str(ast.to_c()))
     # print("OK")
     # # parser.inject_begin(ast)
     # c_file = (av[1][:-2] + 'c')

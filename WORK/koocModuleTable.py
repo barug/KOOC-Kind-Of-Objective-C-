@@ -66,7 +66,16 @@ class KoocModuleTable:
                 return None
         else:
             return None
-                    
+
+    def setSymbolList(self, moduleName, symbolList, Stype):
+        if Stype == KoocModuleTable.NON_MEMBER:
+            self.nonMemberTables[moduleName] = symbolList
+        elif Stype == KoocModuleTable.MEMBER:
+            self.membersTables[moduleName] = symbolList
+        elif Stype == KoocModuleTable.VIRTUAL:
+            self.virtualsTables[moduleName] = symbolList
+        
+        
     # def __str__(self):
     #     stringRep = ""
     #     for moduleName, symbolDict in self.nonMembersTable.items():
