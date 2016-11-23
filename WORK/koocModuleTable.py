@@ -9,6 +9,7 @@ class KoocModuleTable:
         self.membersTables = {}
         self.virtualsTables = {}
         self.instancesStructs = {}
+        self.parentClasses = {}
         
     def addModule(self, moduleName):
         self.nonMemberTables[moduleName] = {}
@@ -17,7 +18,6 @@ class KoocModuleTable:
 
     def hasModule(self, moduleName):
         return moduleName in self.nonMemberTables
-        
         
     def addSymbol(self, moduleName, unMangledName, mangledSymbolNode, Stype):
         if Stype == KoocModuleTable.NON_MEMBER:
@@ -30,6 +30,23 @@ class KoocModuleTable:
             table[unMangledName] = []
         table[unMangledName].append(mangledSymbolNode)
 
+    def addParentClass(self, className, parentName):
+        self.parentClasses[className] = parentName
+
+    def getParentClass(self, className):
+        return self.parentClasses[className]
+
+    def getParentStruct(self, className):
+        return self.instancesStructs[self.parentClasses[className]]
+    
+    def getParentClassSymbols(self, className, unMangledName, Stype):
+        if Stype == KoocModuleTable.NON_MEMBER:
+            return self.nonMembersTable[self.parentClasses[className]][unMangledName]
+        elif Stype == KoocModuleTable.MEMBER:
+            return self.membersTables[self.parentClasses[className]][unMangledName]
+        elif Stype == KoocModuleTable.VIRTUAL:
+            return self.virtualsTables[self.parentClasses[className]][unMangledName]
+        
     def addInstanceStruct(self, className, structName):
         self.instancesStructs[className] = structName
 

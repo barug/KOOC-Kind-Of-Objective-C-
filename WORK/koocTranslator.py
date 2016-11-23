@@ -63,13 +63,14 @@ class KoocTranslator:
         symbolList = self.moduleTable.getSymbolList(className,
                                                     exprNode.name,
                                                     KoocModuleTable.MEMBER)
+        symbolName = None
         for symbol in symbolList:
             if (symbol._ctype._identifier == exprNode.type):
                 print("symbol :" + str(symbol))
                 symbolName = nodes.Id(symbol._name)
-
         if (isinstance(exprNode, VariableCall)):
             return nodes.Arrow(nodes.Id("self"), [symbolName])
+        print("self not translated")
         return None
             
     def searchSelfExpression(self, node, className):
@@ -83,7 +84,6 @@ class KoocTranslator:
         and node.Kclass  == "self" ):
             node = self.translateSelfExpression(node, className)
         return node
-
             
     def translateImplementation(self, implementationNode):
         nonMembers = self.moduleTable.getAllSymbolLists(implementationNode._name,
@@ -152,11 +152,9 @@ class KoocTranslator:
         
         if (parentName is not None
             and self.moduleTable.hasModule(parentName)):
+            self.moduleTable.addParentClass(classNode._name, parentName)
             SymbolLists = self.moduleTable.getAllSymbolLists(parentName,
                                                              KoocModuleTable.MEMBER)
-            self.moduleTable.setSymbolList(classNode._name,
-                                           SymbolLists,
-                                           KoocModuleTable.MEMBER)
             for key, symbolList in SymbolLists.items():
                 for symbol in symbolList:
                     if type(symbol._ctype) is nodes.PrimaryType:
@@ -238,6 +236,21 @@ class KoocTranslator:
                     funcNode.params.insert(0, nodes.Id(exprNode.Kclass))
                     exprNode = funcNode
                     return exprNode
+        symbolList = self.moduleTable.getParentClassSymbols(className,
+                                                            exprNode.name,
+                                                            KoocModuleTable.MEMBER)
+        
+        if symbolList is not None:
+            for symbol in symbolList:
+                print (str(symbol))
+                funcNode = self.getFunctionSymbol(exprNode, symbol)
+                if funcNode is not None:
+                    primaryNode = PrimaryType(self.moduleTable.getParentStruct(className))
+                    primaryNode._decltype = PointerType()
+                    castNode = Cast('()', [primaryNode, Id(exprNode.Kclass)])
+                    funcNode.params.insert(0, castNode)
+                    exprNode = funcNode
+                    return exprNode            
         return None        
     
     def translateKoocExpression(self, exprNode, scopeMaps):

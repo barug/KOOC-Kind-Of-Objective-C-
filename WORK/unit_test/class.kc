@@ -5,11 +5,11 @@
        @member {
        void setBaseMemberVariable(char c)
        {
-		@!(void)[self baseClassMember] = c;
+		@!(char)[self.baseClassMember] = c;
        }      
        void baseClassFunction()
        {
-		printf("base classe variable: %c\n", @!(char)[self baseClassMember]);
+		printf("base classe variable: %c\n", @!(char)[self.baseClassMember]);
        }
        }      
 }
@@ -32,6 +32,6 @@ int main()
 	testClass *ob = @!(testClass)[testClass alloc]; 
 	@!(void)[ob setMemberVariable :(int)13];
 	@!(void)[ob memberFunction :(int) 0 :(char) 'c'];
-	//@!(void)[ob setBaseMemberVariable :(char)'z'];
-	//@!(void)[ob baseClassFunction];
+	@!(void)[ob setBaseMemberVariable :(char)'z'];
+	@!(void)[ob baseClassFunction];
 }
